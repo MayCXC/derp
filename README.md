@@ -47,7 +47,7 @@ envf fname -<<'EOT'
     shift
     fname $@
   else
-    $envf_ "$@"
+    $envf__ "$@"
   fi
   EOT
 
@@ -60,14 +60,14 @@ these definitions are then evaluated as follows:
 fname_ = 0
 
 fname_0 () {
-  envf_ = "fname_0"
+  envf__ = "fname_0"
   echo parent
   if [ $# -gt 0 ]; then
     echo $@
     shift
-    $envf_ "$@"
+    $envf__ "$@"
   fi
-  unset envf_
+  unset envf__
 }
 
 fname () {
@@ -75,6 +75,7 @@ fname () {
 }
 
 fname_1 () {
+  envf__ = "fname_1"
   envf_ = "fname_0"
   echo child
   if [ $# -gt 3 ]l then
@@ -84,6 +85,7 @@ fname_1 () {
   else
     $envf_ "$@"
   fi
+  unset envf__
   unset envf_
 }
 
@@ -91,6 +93,8 @@ fname () {
   fname_1 "$@"
 }
 ```
+
+as seen above, `$envf_` calls the extended implementation `fname_0` from the extention implementation `fname_1`, and `$envf__` calls the current implementation recursively.
 
 the `envc` function is used to document and configure completions for functions defined with `envf`:
 
