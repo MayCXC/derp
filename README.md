@@ -104,7 +104,7 @@ $ . enva.sh
 
 ```
 
-## Advanced:
+## Advanced
 
 this following example is a replacement `ENV` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen`:
 
@@ -125,3 +125,8 @@ envf envs-<<'EOT'
   done
   EOT
 ```
+
+## Similar Projects
+
+- https://github.com/direnv/direnv
+- https://github.com/casey/just
