@@ -7,7 +7,7 @@ these constructs are useful for automation and resource sharing in both interact
 ## Synopsis
 
 ```sh
-envy path/to/profile/env.sh [...]
+envy [path/to/profile/env.sh] [...]
 ```
 
 ## Examples
