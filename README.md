@@ -20,7 +20,7 @@ $ envy path/to/profile/a.sh path/to/profile/b.sh
 
 ## Environment Variables
 
-`ENVS` is an `IFS` delimited paths of profiles to source.
+`ENVS` is an `IFS` delimited list of profile paths to source.
 
 `ENV` is the same environment variable received by the POSIX User Portability Utilities Shell.
 its default value `envy.sh` is an entrypoint that loads the profiles in `ENVS`.
