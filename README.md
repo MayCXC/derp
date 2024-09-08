@@ -103,3 +103,25 @@ $ cat dirb/dirc/envc.sh
 $ . enva.sh
 
 ```
+
+## Advanced:
+
+this following example is a replacement `ENV` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen`:
+
+```sh
+SAFE_ENVS=${ENVS}
+ENVS=
+. "${0}.sh"
+
+envf envs-<<'EOT'
+  for p in "$@"; do
+    echo todo
+    read y/N
+    if [ review = "y" ]; then
+      "${EDITOR} ${p}"
+      read y/N
+      ssh-keygen ...
+    fi
+  done
+  EOT
+```
