@@ -134,4 +134,6 @@ envf envs-<<'EOT'
 ## Similar Projects
 
 - https://github.com/direnv/direnv
+- https://github.com/direnv/direnv?tab=readme-ov-file#related-projects
 - https://github.com/casey/just
+- https://github.com/casey/just?tab=readme-ov-file#alternatives-and-prior-art
