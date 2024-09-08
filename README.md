@@ -76,6 +76,7 @@ fname_0 () {
     shift
     $envf_ "$@"
   fi
+  unset envf_
 }
 
 fname () {
@@ -92,6 +93,7 @@ fname_1 () {
   else
     $envf_ "$@"
   fi
+  unset envf_
 }
 
 fname () {
