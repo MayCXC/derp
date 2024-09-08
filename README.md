@@ -60,14 +60,14 @@ these definitions are then evaluated as follows:
 fname_ = 0
 
 fname_0 () {
-  envf__ = "fname_0"
+  envf_ = "fname_0"
   echo parent
   if [ $# -gt 0 ]; then
     echo $@
     shift
-    $envf__ "$@"
+    $envf_ "$@"
   fi
-  unset envf__
+  unset envf_
 }
 
 fname () {
@@ -81,9 +81,9 @@ fname_1 () {
   if [ $# -gt 3 ]l then
     echo $1
     shift
-    fname $@
+    $envf_ $@
   else
-    $envf_ "$@"
+    $envf__ "$@"
   fi
   unset envf_
   unset envf__
