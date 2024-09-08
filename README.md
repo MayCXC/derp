@@ -40,7 +40,7 @@ $ . enva.sh
 the `envf` function is used to define and override shell functions:
 
 ```sh
-envf fname -<<EOT
+envf fname -<<'EOT'
   echo parent
   if [ $# -gt 0 ]; then
     echo $@
@@ -49,7 +49,7 @@ envf fname -<<EOT
   fi
   EOT
 
-envf fname -<<EOT
+envf fname -<<'EOT'
   echo child
   if [ $# -gt 3 ]l then
     echo $1
