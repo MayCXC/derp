@@ -1,14 +1,15 @@
 #!/usr/bin/env sh
 
-: ${ENV="env.sh"}
-: ${ENVS=""}
-: ${ENVY=$(
-	ABSENVY="${PWD%"/"}/${0#"/"}.sh"
+ENVY=$(
+	ABSENVY="${PWD%"/"}/${0#"/"}"
 	cd $(dirname -- "${ABSENVY}")
 	cat <<-EOT
 		${PWD}/$(basename -- "${ABSENVY}")
 		EOT
-	)}
+	)
+: ${ENV="env.sh"}
+: ${ENVS=""}
+: ${ENVYSH="${ENVY}.sh"}
 
 TAIL=0
 ENVSARGS=""
@@ -47,8 +48,9 @@ done
 
 shift $TAIL
 
+export ENVY
 export ENV
 export ENVS
-export ENVY
+export ENVYSH
 # POSIX User Portability Utilities sh
 exec sh "${@}"
