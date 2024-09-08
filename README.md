@@ -28,15 +28,6 @@ it can be extended with its own utility functions in the same manner as other pr
 
 ## POSIX Shell Functions
 
-the `envs` function is used to source profiles with the working directory set to their dirname:
-
-```sh
-$ cat enva.sh
-$ cat dirb/envb.sh
-$ cat dirb/dirc/envc.sh
-$ . enva.sh
-```
-
 the `envf` function is used to define and override shell functions:
 
 ```sh
@@ -96,6 +87,16 @@ fname_1 () {
   unset envf_
 }
 
+the `envc` function is used to document and configure completions for functions defined with `envf`:
+
+the `envs` function is used to source profiles with the working directory set to their dirname:
+
+```sh
+$ cat enva.sh
+$ cat dirb/envb.sh
+$ cat dirb/dirc/envc.sh
+$ . enva.sh
+```
 fname () {
   fname_1 "$@"
 }
