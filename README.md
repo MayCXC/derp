@@ -36,22 +36,22 @@ envf fname -<<'EOT'
   if [ $# -gt 0 ]; then
     echo $@
     shift
-    $envf_ "$@"
+    fname "$@"
   fi
   EOT
 
 envf fname -<<'EOT'
   echo child
-  if [ $# -gt 3 ]l then
+  if [ $# -gt 3 ]; then
     echo $1
     shift
     fname $@
   else
-    $envf__ "$@"
+    $envf_ "$@"
   fi
   EOT
 
-envf 1 2 3 4 5
+fname 1 2 3 4 5
 ```
 
 these definitions are then evaluated as follows:
@@ -60,12 +60,11 @@ these definitions are then evaluated as follows:
 fname_ = 0
 
 fname_0 () {
-  envf_ = "fname_0"
   echo parent
   if [ $# -gt 0 ]; then
     echo $@
     shift
-    $envf_ "$@"
+    fname "$@"
   fi
   unset envf_
 }
@@ -75,18 +74,16 @@ fname () {
 }
 
 fname_1 () {
-  envf_ = "fname_1"
-  envf__ = "fname_0"
+  envf_ = "fname_0"
   echo child
   if [ $# -gt 3 ]l then
     echo $1
     shift
-    $envf_ $@
+    fname $@
   else
-    $envf__ "$@"
+    $envf_ "$@"
   fi
   unset envf_
-  unset envf__
 }
 
 fname () {
