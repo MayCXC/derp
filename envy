@@ -11,9 +11,10 @@
 	)}
 
 TAIL=0
-ENVSARGS="$*"
+ENVSARGS=""
 
 getenvs () {
+	ENVSARGS="$*"
 	while [ $# -gt 0 ]; do
 		if [ $1 = "--" ]; then
 			TAIL=$#
@@ -41,7 +42,7 @@ while [ ${SPIN} -gt 0 ]; do
 	HEAD="${1}"
 	shift
 	set -- "$@" "${HEAD}"
-	SPIN=$((SPIN+1))
+	SPIN=$((SPIN-1))
 done
 
 shift $TAIL
