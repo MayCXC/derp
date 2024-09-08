@@ -87,6 +87,11 @@ fname_1 () {
   unset envf_
 }
 
+fname () {
+  fname_1 "$@"
+}
+```
+
 the `envc` function is used to document and configure completions for functions defined with `envf`:
 
 the `envs` function is used to source profiles with the working directory set to their dirname:
@@ -96,8 +101,5 @@ $ cat enva.sh
 $ cat dirb/envb.sh
 $ cat dirb/dirc/envc.sh
 $ . enva.sh
-```
-fname () {
-  fname_1 "$@"
-}
+
 ```
