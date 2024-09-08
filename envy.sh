@@ -61,7 +61,7 @@ if [ "${PS1}-o" = "${PS1}-x" ]; then
 	PS1='$(logname)@$(uname -n) $(dirname $(pwd)) \$'
 fi
 
-set -- ${ENV} ${ENVS}
+set -- "${ENV}" ${ENVS}
 
 for ENV in "$@"; do
 	PS1=". ${ENV}\n${PS1}"
