@@ -1,5 +1,5 @@
 # envy
-stackable and composable sh profiles
+stackable and composable `sh` profiles
 
 `envy` is a script that enables a POSIX User Portability Utilities Shell to source multiple profiles, and share definitions between them.
 these constructs are useful for automation and resource sharing in both interactive and non-interactive environments.
