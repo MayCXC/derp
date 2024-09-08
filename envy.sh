@@ -49,26 +49,29 @@ envf envs <<-'EOT'
 	shift
 	EOT
 
-if [ "${IFS-o}" = "${IFS-x}" ]; then
-	set -- ${ENVS}
-else
-	IFS=":"
-	set -- ${ENVS}
-	unset IFS
-fi
+envf envp <<-'EOT'
+	if [ "${IFS-o}" = "${IFS-x}" ]; then
+		set -- ${ENVS}
+	else
+		IFS=":"
+		set -- ${ENVS}
+		unset IFS
+	fi
 
-if [ "${PS1}-o" = "${PS1}-x" ]; then
-	PS1='$(logname)@$(uname -n) $(dirname $(pwd)) \$'
-fi
+	envs "$@"
 
-set -- "${ENV}" ${ENVS}
+	for ENV in "$@"; do
+		PS1=". ${ENV}\n${PS1}"
+	done
+	PS1=$(
+		ABSENV="${PWD%"/"}/${ENV#"/"}"
+		cd $(dirname -- "${ABSENV}")
+		cat <<-EOT_
 
-for ENV in "$@"; do
-	PS1=". ${ENV}\n${PS1}"
-done
-PS1="\n$(pwd)\n${PS1}"
+			. ${PWD}/$(basename -- "${ABSENV}")
+			${PS1}
+			EOT_
+	)
+	EOT
 
-ENV="${1}"
-shift
-
-envs "$@"
+envp
