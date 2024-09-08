@@ -75,8 +75,8 @@ fname () {
 }
 
 fname_1 () {
-  envf__ = "fname_1"
-  envf_ = "fname_0"
+  envf_ = "fname_1"
+  envf__ = "fname_0"
   echo child
   if [ $# -gt 3 ]l then
     echo $1
@@ -85,8 +85,8 @@ fname_1 () {
   else
     $envf_ "$@"
   fi
-  unset envf__
   unset envf_
+  unset envf__
 }
 
 fname () {
