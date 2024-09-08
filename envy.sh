@@ -73,5 +73,3 @@ envf envp <<-'EOT'
 			EOT_
 	)
 	EOT
-
-envp
