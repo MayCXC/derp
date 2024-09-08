@@ -47,7 +47,7 @@ envf fname -<<'EOT'
     shift
     fname $@
   else
-    $envf_ "$@"
+    $fname_prev "$@"
   fi
   EOT
 
