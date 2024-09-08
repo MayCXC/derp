@@ -66,7 +66,6 @@ fname_0 () {
     shift
     fname "$@"
   fi
-  unset envf_
 }
 
 fname () {
@@ -74,16 +73,16 @@ fname () {
 }
 
 fname_1 () {
-  envf_ = "fname_0"
+  envf__ = "fname_0"
   echo child
   if [ $# -gt 3 ]l then
     echo $1
     shift
     fname $@
   else
-    $envf_ "$@"
+    $envf__ "$@"
   fi
-  unset envf_
+  unset envf__
 }
 
 fname () {
