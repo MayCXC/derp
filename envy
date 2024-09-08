@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+
+: ${ENV="${0}.sh"}
+: ${ENVS=""}
+
+TAIL=0
+ENVSARGS="$*"
+
+getenvs () {
+	while [ $# -gt 0 ]; do
+		if [ $1 = "--" ]; then
+			TAIL=$#
+			shift
+			ENVSARGS="$*"
+		else
+			shift
+		fi
+	done
+	set -- ${ENVS} ${ENVSARGS}
+	ENVS="$*"
+}
+
+if [ "${IFS-o}" = "${IFS-x}" ]; then
+	getenvs
+else
+	IFS=":"
+	getenvs
+	unset IFS
+fi
+
+SPIN=${TAIL}
+
+while [ ${SPIN} -gt 0 ]; do
+	HEAD="${1}"
+	shift
+	set -- "$@" "${HEAD}"
+	SPIN=$((SPIN+1))
+done
+
+shift $TAIL
+
+# POSIX User Portability Utilities sh
+ENV="${ENV}" ENVS="${ENVS}" exec sh "${@}"
