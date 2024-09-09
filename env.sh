@@ -1,4 +1,4 @@
 . "${ENVYSH}"
-HOME="$(dirname -- "${ENV}")"
+HOME="$(dirname -- "${PWD%"/"}/${ENV#"/"}")"
 PS1='$(logname)@$(uname -n) $(pwd) \$ '
 envp
