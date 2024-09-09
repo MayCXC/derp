@@ -1,3 +1,3 @@
 . "${ENVYSH}"
-PS1='$(logname)@$(uname -n) $(dirname $(pwd)) \$ '
+PS1='$(logname)@$(uname -n) $(pwd) \$ '
 envp
