@@ -1,15 +1,18 @@
 #!/usr/bin/env sh
 
 ENVY=$(
-	ABSENVY="${PWD%"/"}/${0#"/"}"
-	cd $(dirname -- "${ABSENVY}")
+	ENVYD=$(dirname -- "${0}")
+	case "${ENVYD}" in
+		(/*) CDPATH= cd -P -- "${ENVYD}";;
+		(*) CDPATH= cd -P -- "./${ENVYD}";;
+	esac
 	cat <<-EOT
-		${PWD}/$(basename -- "${ABSENVY}")
+		${PWD}/$(basename -- "${0}")
 		EOT
-	)
+)
+: ${ENVYSH="${ENVY}.sh"}
 : ${ENV="env.sh"}
 : ${ENVS=""}
-: ${ENVYSH="${ENVY}.sh"}
 
 TAIL=0
 ENVSARGS=""

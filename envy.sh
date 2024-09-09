@@ -32,20 +32,27 @@ envf () {
 	eval "${1}_=\$((${1}_+1))"
 }
 
+envf envd <<-'EOT'
+	case "$*" in
+		(/*) CDPATH= cd -P -- "$*";;
+		(*) CDPATH= cd -P -- "./$*";;
+	esac
+	EOT
+
 envf envs <<-'EOT'
 	set -- "${PWD}" "$@"
 	while [ $# -gt 1 ]; do
-		cd $(dirname -- "${1}")
+		envd $(dirname -- "${1}")
 		if [ -f "${2}" ]; then
-			cd $(dirname -- "${2}")
+			envd $(dirname -- "${2}")
 			. $(basename -- "${2}")
 		elif [ -d "${2}" ]; then
-			cd "${2}"
+			envd "${2}"
 			. "env.sh"
 		fi
 		shift
 	done
-	cd "${1}"
+	cd -P "${1}"
 	shift
 	EOT
 
@@ -60,15 +67,19 @@ envf envp <<-'EOT'
 
 	envs "$@"
 
-	for ENV in "$@"; do
-		PS1=". ${ENV}\n${PS1}"
+	for ENV_ in "${ENV}" "$@"; do
+		PS1=$(
+			envd "$(dirname -- "${ENV_}")"
+			cat <<-EOT_
+				. ${PWD}/$(basename -- "${ENV_}")
+				${PS1}
+				EOT_
+		)
 	done
+
 	PS1=$(
-		ABSENV="${PWD%"/"}/${ENV#"/"}"
-		cd $(dirname -- "${ABSENV}")
 		cat <<-EOT_
 
-			. ${PWD}/$(basename -- "${ABSENV}")
 			${PS1}
 			EOT_
 	)
