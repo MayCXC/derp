@@ -98,6 +98,8 @@ in the example above, `$fname_prev` calls the extended implementation `fname_0` 
 
 the `envc` function is used to document and configure completions for functions defined with `envf`:
 
+the `envd` function applies sane default options to `cd`.
+
 the `envs` function is used to source profiles from their own directories:
 
 ```sh
