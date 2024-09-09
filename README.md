@@ -20,7 +20,7 @@ $ envy path/to/profile/a.sh path/to/profile/b.sh
 
 ## Environment Variables
 
-`$ENVY` is the absolute path of the `envy` executable. it is used to resolve the default value of `$ENVYSH`, or can be used to extend it otherwise, [(ex.)](#advanced).
+`$ENVY` is the absolute path of the `envy` executable. it is used to resolve the default value of `$ENVYSH`, or otherwise can be used to extend it, [(ex.)](#advanced).
 
 `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html).
 its default value `envy.sh` is an entrypoint that loads the profiles in `$ENVS`.
