@@ -33,10 +33,10 @@ getenvs () {
 }
 
 if [ "${IFS-o}" = "${IFS-x}" ]; then
-	getenvs
+	getenvs "$@"
 else
 	IFS=":"
-	getenvs
+	getenvs "$@"
 	unset IFS
 fi
 
