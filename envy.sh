@@ -52,7 +52,7 @@ envf envs <<-'EOT'
 		fi
 		shift
 	done
-	cd -P "${1}"
+	envd "${1}"
 	shift
 	EOT
 
