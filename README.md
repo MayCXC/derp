@@ -20,19 +20,30 @@ $ envy path/to/profile/a.sh path/to/profile/b.sh
 
 ## Environment Variables
 
-`$ENVY` is the absolute path of the `envy` executable. it is used to resolve the default value of `$ENVYSH`, or otherwise can be used to extend it, [(ex.)](#advanced).
+the following environment variables are modified and exported from envy:
 
-`$ENVYSH` is the absolute path of `envy.sh`. it can be sourced from a profile to allow use of its shell functions, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
+* `$ENVY` is the absolute path of the `envy` executable. it is used to resolve the default value of `$ENVYSH`, or otherwise can be used to extend it, [(ex.)](#advanced).
+
+* `$ENVYSH` is the absolute path of `envy.sh`. it can be sourced from a profile to allow use of its shell functions, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
 this entrypoint can also be extended with its own utility functions, in the same manner as other profiles.
 
-`$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html).
-the example `env.sh` in this repository sources `$ENVYSH` to load the profiles in `$ENVS` with `envp`, and sets new values for `$HOME` and `$PS1`.
+* `$ENVSH` is the absolute path of the default `env.sh`. it can be sourced from a profile to extend its behavior. the default `env.sh` sources `$ENVYSH`, sources each profile in `$ENVS` with `envs`, and sets new values for `$HOME` and `$PS1`.
 
-`$ENVS` is an `$IFS` delimited list of profile paths to source.
+* `$ENVS` is an `$IFS` delimited list of profile paths to source. it defaults to `.` if `${ENV}` is not null.
+
+* `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `$ENVSH`.
+
+the following environment variables are set by, but not exported from, envy:
+
+* `ENVSTAIL`
+* `ENVSARGS`
+* `ENVSSPIN`
+
+finally, the default profile appends `$ENVD` to profile paths that resolve to a directory. its default value is `env.sh`.
 
 ## POSIX Shell Functions
 
-the `envf` function is used to define and override shell functions:
+the `envf` function is used to define and extend shell functions:
 
 ```sh
 envf fname -<<'EOT'
@@ -96,8 +107,6 @@ fname () {
 
 in the example above, `$fname_prev` calls the extended implementation `fname_0` from the extention implementation `fname_1`.
 
-the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is with posix sh):
-
 the `envd` function applies sane default options to `cd`.
 
 the `envs` function is used to source profiles from their own directories:
@@ -110,12 +119,15 @@ $ . enva.sh
 
 ```
 
-the `envp` function is used to source the profiles in `$ENVS` with `envs`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). it also configures `$PS1`
-to display the paths of each profile it sources.
+the default profile extends `envs` to handle profile directories with `$ENVD`, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
+if `envs` receives an error exit code when it sources a profile, it exits with that code.
+any paths sourced from `envs` that do not start with `/` are prepended with `./`, to avoid sources from `$PATH`.
+
+the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is to do with posix sh):
 
 ## Advanced Usage
 
-the following example is a replacement `envy.sh` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen`:
+the following example is a replacement `envy.sh` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen` (todo):
 
 ```sh
 . "${ENVY}.sh"

@@ -1,34 +1,42 @@
 #!/usr/bin/env sh
 
-ENVY="$(
-	ENVYD="$(dirname -- $(readlink -- "${0}"))"
-	case "${ENVYD}" in
-		(/*) CDPATH= cd -P -- "${ENVYD}";;
-		(*) CDPATH= cd -P -- "./${ENVYD}";;
-	esac
-	cat <<-EOT
-		${PWD}/$(basename -- "${0}")
-		EOT
-)"
-: ${ENVYSH="${ENVY}.sh"}
-: ${ENV="env.sh"}
+ENVY="$(realpath -- "${0}")"
+: ${ENVYSH="$(dirname -- "${ENVY}")/envy.sh"}
+ENVYSH="$(realpath -- "${ENVYSH}")"
+: ${ENVSH="$(dirname -- "${ENVY}")/env.sh"}
+ENVSH="$(realpath -- "${ENVSH}")"
 : ${ENVS=""}
 
-TAIL=0
-ENVSARGS=""
+ENVSTAIL=$#
+ENVSARGS="$*"
 
 getenvs () {
-	ENVSARGS="$*"
 	while [ $# -gt 0 ]; do
-		if [ $1 = "--" ]; then
-			TAIL=$#
+		if [ "${1}" = "--" ]; then
+			ENVSTAIL=$#
 			shift
 			ENVSARGS="$*"
 		else
 			shift
 		fi
 	done
-	set -- ${ENVS} ${ENVSARGS}
+
+	set -- ${ENVSARGS}
+
+	if [ $# -eq 0 ]; then
+		if [ "${ENV-o}" = "${ENV-x}" ]; then
+			set -- "."
+		fi
+	fi
+
+	ENVSSPIN=$#
+	while [ ${ENVSSPIN} -gt 0 ]; do
+		set -- "$@" "$(realpath "${1}")"
+		shift
+		ENVSSPIN=$((ENVSSPIN-1))
+	done
+
+	set -- ${ENVS} "$@"
 	ENVS="$*"
 }
 
@@ -40,19 +48,24 @@ else
 	unset IFS
 fi
 
-SPIN=$(($#-TAIL))
-
-while [ ${SPIN} -gt 0 ]; do
+ENVSSPIN=$(($#-ENVSTAIL))
+while [ ${ENVSSPIN} -gt 0 ]; do
 	set -- "$@" "${1}"
 	shift
-	SPIN=$((SPIN-1))
+	ENVSSPIN=$((ENVSSPIN-1))
 done
+unset ENVSSPIN
 
-shift $TAIL
+shift ${ENVSTAIL}
+
+: ${ENV="${ENVSH}"}
+ENV="$(realpath -- "${ENV}")"
 
 export ENVY
 export ENVYSH
-export ENV
+export ENVSH
 export ENVS
+export ENV
+
 # POSIX User Portability Utilities sh
 exec sh "$@"

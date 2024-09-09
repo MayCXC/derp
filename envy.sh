@@ -2,7 +2,6 @@ envf () {
 	if [ $# -eq 1 ]; then
 		set -- "${1}" "{" "}"
 	fi
-
 	eval "${1}_=\${${1}_-0}"
 	eval "$(
 		eval "envf_=\${${1}_}"
@@ -33,57 +32,28 @@ envf () {
 }
 
 envf envd <<-'EOT'
-	case "$*" in
-		(/*) CDPATH= cd -P -- "$*";;
-		(*) CDPATH= cd -P -- "./$*";;
-	esac
+	while [ $# -gt 0 ]; do
+		case "${1}" in
+			(/*) CDPATH= cd -P -- "${1}";;
+			(*) CDPATH= cd -P -- "./${1}";;
+		esac
+		shift
+	done
 	EOT
 
 envf envs <<-'EOT'
-	set -- "${PWD}" "$@"
-	while [ $# -gt 1 ]; do
+	if [ $# -eq 1 ]; then
+		set -- "$@" "${PWD}"
 		envd "$(dirname -- "${1}")"
-		if [ -f "${2}" ]; then
-			envd "$(dirname -- "${2}")"
-			. "$(basename -- "${2}")"
-		elif [ -d "${2}" ]; then
-			envd "${2}"
-			. "env.sh"
-		fi
+		. "./$(basename -- "${1}")"
 		if [ ! $? ]; then
 			exit $?
 		fi
-		shift
-	done
-	envd "${1}"
-	shift
-	EOT
-
-envf envp <<-'EOT'
-	if [ "${IFS-o}" = "${IFS-x}" ]; then
-		set -- ${ENVS}
+		envd "${2}"
 	else
-		IFS=":"
-		set -- ${ENVS}
-		unset IFS
+		while [ $# -gt 0 ]; do
+			envs "${1}"
+			shift
+		done
 	fi
-
-	envs "$@"
-
-	for ENV_ in "${ENV}" "$@"; do
-		PS1="$(
-			envd "$(dirname -- "${ENV_}")"
-			cat <<-EOT_
-				. ${PWD}/$(basename -- "${ENV_}")
-				${PS1}
-				EOT_
-		)"
-	done
-
-	PS1="$(
-		cat <<-EOT_
-
-			${PS1}
-			EOT_
-	)"
 	EOT
