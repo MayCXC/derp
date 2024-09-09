@@ -113,7 +113,7 @@ $ . enva.sh
 the `envp` function is used to source the profiles in `$ENVS` with `envs`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). it also configures `$PS1`
 to display the paths of each profile it sources.
 
-## Advanced
+## Advanced Usage
 
 the following example is a replacement `envy.sh` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen`:
 
