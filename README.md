@@ -96,7 +96,7 @@ fname () {
 
 in the example above, `$fname_prev` calls the extended implementation `fname_0` from the extention implementation `fname_1`.
 
-the `envc` function is used to document and configure completions for functions defined with `envf`:
+the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is with posix sh):
 
 the `envd` function applies sane default options to `cd`.
 
