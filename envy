@@ -55,7 +55,6 @@ while [ ${ENVSSPIN} -gt 0 ]; do
 	ENVSSPIN=$((ENVSSPIN-1))
 done
 unset ENVSSPIN
-
 shift ${ENVSTAIL}
 
 : ${ENV="${ENVSH}"}
@@ -66,6 +65,5 @@ export ENVYSH
 export ENVSH
 export ENVS
 export ENV
-
 # POSIX User Portability Utilities sh
 exec sh "$@"
