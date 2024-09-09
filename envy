@@ -40,7 +40,7 @@ else
 	unset IFS
 fi
 
-SPIN=${TAIL}
+SPIN=$(($#-TAIL))
 
 while [ ${SPIN} -gt 0 ]; do
 	set -- "$@" "${1}"
