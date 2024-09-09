@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 ENVY=$(
-	ENVYD=$(dirname -- "${0}")
+	ENVYD=$(dirname -- $(readlink -- "${0}"))
 	case "${ENVYD}" in
 		(/*) CDPATH= cd -P -- "${ENVYD}";;
 		(*) CDPATH= cd -P -- "./${ENVYD}";;
