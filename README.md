@@ -22,13 +22,13 @@ $ envy path/to/profile/a.sh path/to/profile/b.sh
 
 `$ENVY` is the absolute path of the `envy` executable. it is used to resolve the default value of `$ENVYSH`, or otherwise can be used to extend it, [(ex.)](#advanced).
 
+`$ENVYSH` is the absolute path of `envy.sh`. it can be sourced from a profile to allow use of its shell functions, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
+this entrypoint can also be extended with its own utility functions, in the same manner as other profiles.
+
 `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html).
 the example `env.sh` in this repository sources `$ENVYSH` to load the profiles in `$ENVS` with `envp`, and sets new values for `$HOME` and `$PS1`.
 
 `$ENVS` is an `$IFS` delimited list of profile paths to source.
-
-`$ENVYSH` is the absolute path of `envy.sh`. it can be sourced from a profile to allow use of its shell functions, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
-this entrypoint can also be extended with its own utility functions, in the same manner as other profiles.
 
 ## POSIX Shell Functions
 
