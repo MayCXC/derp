@@ -46,8 +46,9 @@ envf envs <<-'EOT'
 		set -- "$@" "${PWD}"
 		envd "$(dirname -- "${1}")"
 		. "./$(basename -- "${1}")"
-		if [ ! $? ]; then
-			exit $?
+		set -- "$@" $?
+		if [ ${3} -ne 0 ]; then
+			exit ${3}
 		fi
 		envd "${2}"
 	else

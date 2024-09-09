@@ -6,3 +6,6 @@ exit
 exit
 ls
 exit
+ls
+b
+exit
