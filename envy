@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-ENVY=$(
-	ENVYD=$(dirname -- $(readlink -- "${0}"))
+ENVY="$(
+	ENVYD="$(dirname -- $(readlink -- "${0}"))"
 	case "${ENVYD}" in
 		(/*) CDPATH= cd -P -- "${ENVYD}";;
 		(*) CDPATH= cd -P -- "./${ENVYD}";;
@@ -9,7 +9,7 @@ ENVY=$(
 	cat <<-EOT
 		${PWD}/$(basename -- "${0}")
 		EOT
-)
+)"
 : ${ENVYSH="${ENVY}.sh"}
 : ${ENV="env.sh"}
 : ${ENVS=""}
@@ -43,17 +43,16 @@ fi
 SPIN=${TAIL}
 
 while [ ${SPIN} -gt 0 ]; do
-	HEAD="${1}"
+	set -- "$@" "${1}"
 	shift
-	set -- "$@" "${HEAD}"
 	SPIN=$((SPIN-1))
 done
 
 shift $TAIL
 
 export ENVY
+export ENVYSH
 export ENV
 export ENVS
-export ENVYSH
 # POSIX User Portability Utilities sh
 exec sh "${@}"

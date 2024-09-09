@@ -42,10 +42,10 @@ envf envd <<-'EOT'
 envf envs <<-'EOT'
 	set -- "${PWD}" "$@"
 	while [ $# -gt 1 ]; do
-		envd $(dirname -- "${1}")
+		envd "$(dirname -- "${1}")"
 		if [ -f "${2}" ]; then
 			envd $(dirname -- "${2}")
-			. $(basename -- "${2}")
+			. "$(basename -- "${2}")"
 		elif [ -d "${2}" ]; then
 			envd "${2}"
 			. "env.sh"
@@ -68,19 +68,19 @@ envf envp <<-'EOT'
 	envs "$@"
 
 	for ENV_ in "${ENV}" "$@"; do
-		PS1=$(
+		PS1="$(
 			envd "$(dirname -- "${ENV_}")"
 			cat <<-EOT_
 				. ${PWD}/$(basename -- "${ENV_}")
 				${PS1}
 				EOT_
-		)
+		)"
 	done
 
-	PS1=$(
+	PS1="$(
 		cat <<-EOT_
 
 			${PS1}
 			EOT_
-	)
+	)"
 	EOT
