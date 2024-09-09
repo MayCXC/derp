@@ -55,4 +55,4 @@ export ENVYSH
 export ENV
 export ENVS
 # POSIX User Portability Utilities sh
-exec sh "${@}"
+exec sh "$@"

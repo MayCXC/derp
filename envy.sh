@@ -44,11 +44,14 @@ envf envs <<-'EOT'
 	while [ $# -gt 1 ]; do
 		envd "$(dirname -- "${1}")"
 		if [ -f "${2}" ]; then
-			envd $(dirname -- "${2}")
+			envd "$(dirname -- "${2}")"
 			. "$(basename -- "${2}")"
 		elif [ -d "${2}" ]; then
 			envd "${2}"
 			. "env.sh"
+		fi
+		if [ ! $? ]; then
+			exit $?
 		fi
 		shift
 	done
