@@ -1,7 +1,7 @@
 # envy
 stackable and composable `sh` profiles
 
-`envy` is a script that enables a POSIX User Portability Utilities Shell to source multiple profiles, and share definitions between them.
+`envy` is a script that enables a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) to source multiple profiles, and share definitions between them.
 these constructs are useful for automation and resource sharing in both interactive and non-interactive environments.
 
 ## Synopsis
@@ -20,11 +20,15 @@ $ envy path/to/profile/a.sh path/to/profile/b.sh
 
 ## Environment Variables
 
-`ENVS` is an `IFS` delimited list of profile paths to source.
+`$ENVY` is the absolute path of the `envy` executable. it is used to resolve the default value of `$ENVYSH`, or can be used to extend it otherwise, [(ex.)](#advanced).
 
-`ENV` is the same environment variable received by the POSIX User Portability Utilities Shell.
-its default value `envy.sh` is an entrypoint that loads the profiles in `ENVS`.
+`$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html).
+its default value `envy.sh` is an entrypoint that loads the profiles in `$ENVS`.
 this entrypoint can be extended with its own utility functions, in the same manner as other profiles.
+
+`$ENVS` is an `$IFS` delimited list of profile paths to source.
+
+`$ENVYSH` is the absolute path of `envy.sh`. it can be sourced from a profile to allow use of its shell functions, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
 
 ## POSIX Shell Functions
 
@@ -90,11 +94,11 @@ fname () {
 }
 ```
 
-as seen above, `$envf_` calls the extended implementation `fname_0` from the extention implementation `fname_1`, and `$envf__` calls the current implementation recursively.
+in the example above, `$fname_prev` calls the extended implementation `fname_0` from the extention implementation `fname_1`.
 
 the `envc` function is used to document and configure completions for functions defined with `envf`:
 
-the `envs` function is used to source profiles with the working directory set to their dirname:
+the `envs` function is used to source profiles from their own directories:
 
 ```sh
 $ cat enva.sh
@@ -104,14 +108,15 @@ $ . enva.sh
 
 ```
 
-## Advanced:
+the `envp` function is used to source the profiles in `$ENVS` with `envs`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). it also configures `$PS1`
+to display the paths of each profile it sources.
 
-this following example is a replacement `ENV` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen`:
+## Advanced
+
+the following example is a replacement `envy.sh` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen`:
 
 ```sh
-SAFE_ENVS=${ENVS}
-ENVS=
-. "${0}.sh"
+. "${ENVY}.sh"
 
 envf envs-<<'EOT'
   for p in "$@"; do
@@ -125,3 +130,10 @@ envf envs-<<'EOT'
   done
   EOT
 ```
+
+## Similar Projects
+
+- https://github.com/direnv/direnv
+- https://github.com/direnv/direnv?tab=readme-ov-file#related-projects
+- https://github.com/casey/just
+- https://github.com/casey/just?tab=readme-ov-file#alternatives-and-prior-art
