@@ -6,7 +6,7 @@ these constructs are useful for automation and resource sharing in both interact
 
 ## Synopsis
 
-`envy` cannot be executed directly. rather, `envy.sh` can be sourced from `$PATH` by a POSIX UPU Shell, either interactively or in an executable script.
+`envy` cannot be executed directly. rather, `envy.sh` can be sourced from `$PATH` by a POSIX UPU Shell, either interactively or by an executable script.
 such scripts can be generated and placed in a convenient directory, like the root of a version controlled repository, with the executable `envx`:
 
 ```sh
