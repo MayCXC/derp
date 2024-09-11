@@ -54,7 +54,7 @@ the `envf` function is used to define and extend shell functions:
 envf fname -<<'EOT'
   echo parent
   if [ $# -gt 0 ]; then
-    echo $@
+    echo "$@"
     shift
     fname "$@"
   fi
@@ -65,7 +65,7 @@ envf fname -<<'EOT'
   if [ $# -gt 3 ]; then
     echo $1
     shift
-    fname $@
+    fname "$@"
   else
     $fname_prev "$@"
   fi
@@ -82,7 +82,7 @@ fname_=0
 fname_0 () {
   echo parent
   if [ $# -gt 0 ]; then
-    echo $@
+    echo "$@"
     shift
     fname "$@"
   fi
@@ -100,7 +100,7 @@ fname_1 () {
   if [ $# -gt 3 ] then
     echo $1
     shift
-    fname $@
+    fname "$@"
   else
     $fname_prev "$@"
   fi
