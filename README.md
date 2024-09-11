@@ -19,7 +19,7 @@ which generates an executable `envy`:
 exec ./path/to/target/directory/envy [path/to/profile/env.sh] [...]
 ```
 
-that sources `envy` either from a copy placed in the directory specified by `$ENVP`, or otherwise from `$PATH`.
+that sources `envy.sh` either from a copy placed in the directory specified by `$ENVP`, or otherwise from `$PATH`, and calls the function `envy` with its arguments.
 
 ## Examples
 
