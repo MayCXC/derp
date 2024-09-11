@@ -23,10 +23,10 @@ envf envs <<-'EOT'
 HOME="$(dirname -- "${ENV}")"
 export HOME
 
-PS1='$(logname)@$(uname -n) $(pwd) \$ '
-PS1=". ${ENV}\n${PS1}"
-
 if [ $# -eq 0 ]; then
+	PS1='$(logname)@$(uname -n) $(pwd) \$ '
+	PS1=". ${ENV}\n${PS1}"
+
 	if [ "${IFS-o}" = "${IFS-x}" ]; then
 		set -- ${ENVS}
 	else
@@ -45,7 +45,7 @@ if [ $# -eq 0 ]; then
 		fi
 		shift
 	done
-fi
 
-PS1="\n${PS1}"
-export PS1
+	PS1="\n${PS1}"
+	export PS1
+fi
