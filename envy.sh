@@ -78,7 +78,6 @@ envf envs <<-'EOT'
 
 envf envy <<-'EOT'
 	ENVY="$(realpath -- "${0}")"
-
 	ENVD="$(dirname -- "${ENVY}")"
 
 	: ${ENV="env.sh"}
@@ -143,7 +142,6 @@ envf envy <<-'EOT'
 	export ENVD
 	export ENV
 	export ENVS
-
 	# POSIX User Portability Utilities sh
 	exec sh "$@"
 	EOT
