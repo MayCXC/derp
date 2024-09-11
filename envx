@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "envy.sh"
 
-ENVX=$(realpath -- "${0}")
+ENVX="$(realpath -- "${0}")"
 ENVD="$(dirname -- "${ENVX}")"
 
 envd "$@"

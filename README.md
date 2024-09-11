@@ -30,12 +30,6 @@ $ ./envy path/to/profile/a.sh path/to/profile/b.sh
 
 ## Environment Variables
 
-the following environment variables are set by, and exported from, `envy`:
-
-* `$ENVY` is the absolute path of the `envy` executable.
-
-* `$ENVD` is the dirname of `$ENVY`.
-
 the following environment variables are provided with default values by, and exported from, `envy`:
 
 * `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `env.sh`, and it is resolved from `$ENVD`.
@@ -146,7 +140,7 @@ the default profile defines a function named `envy` that sources `$ENVY`, with `
 the following example is a replacement `envy.sh` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen` (todo):
 
 ```sh
-. "${ENVY}.sh"
+. "envy.sh"
 
 envf envs-<<'EOT'
   for p in "$@"; do

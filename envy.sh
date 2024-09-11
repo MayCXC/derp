@@ -77,12 +77,9 @@ envf envs <<-'EOT'
 	EOT
 
 envf envy <<-'EOT'
-	ENVY="$(realpath -- "${0}")"
-	ENVD="$(dirname -- "${ENVY}")"
-
 	: ${ENV="env.sh"}
 	ENV="$(
-		envd "${ENVD}"
+		envd "$(dirname -- "${0}")"
 		realpath -- "${ENV}"
 	)"
 
@@ -138,10 +135,9 @@ envf envy <<-'EOT'
 	shift ${ENVSTAIL}
 	unset -v -- ENVSTAIL
 
-	export ENVY
-	export ENVD
 	export ENV
 	export ENVS
+
 	# POSIX User Portability Utilities sh
 	exec sh "$@"
 	EOT

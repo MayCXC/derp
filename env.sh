@@ -20,7 +20,7 @@ envf envs <<-'EOT'
 	fi
 	EOT
 
-HOME="${ENVD}"
+HOME="$(dirname -- "${ENV}")"
 export HOME
 
 PS1='$(logname)@$(uname -n) $(pwd) \$ '
