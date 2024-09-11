@@ -26,24 +26,26 @@ export HOME
 PS1='$(logname)@$(uname -n) $(pwd) \$ '
 PS1=". ${ENV}\n${PS1}"
 
-if [ "${IFS-o}" = "${IFS-x}" ]; then
-	set -- ${ENVS}
-else
-	IFS=":"
-	set -- ${ENVS}
-	unset -v -- IFS
-fi
-
-envs "$@"
-
-while [ $# -gt 0 ]; do
-	if [ -d "${1}" ]; then
-		PS1=". ${1%"/"}/${ENVF#"/"}\n${PS1}"
+if [ $# -eq 0 ]; then
+	if [ "${IFS-o}" = "${IFS-x}" ]; then
+		set -- ${ENVS}
 	else
-		PS1=". ${1}\n${PS1}"
+		IFS=":"
+		set -- ${ENVS}
+		unset -v -- IFS
 	fi
-	shift
-done
+
+	envs "$@"
+
+	while [ $# -gt 0 ]; do
+		if [ -d "${1}" ]; then
+			PS1=". ${1%"/"}/${ENVF#"/"}\n${PS1}"
+		else
+			PS1=". ${1}\n${PS1}"
+		fi
+		shift
+	done
+fi
 
 PS1="\n${PS1}"
 export PS1

@@ -1,12 +1,13 @@
 # envy
 stackable and composable `sh` profiles
 
-`envy` is a script that enables a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) to source multiple profiles, and share definitions between them.
+envy is a script generator and a collection of functions that enable a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) to source multiple profiles, and share definitions between them.
 these constructs are useful for automation and resource sharing in both interactive and non-interactive environments.
 
 ## Synopsis
 
-`envy` cannot be executed directly. rather, `envy.sh` can be sourced from `$PATH` by a POSIX UPU Shell, either interactively or via an executable script. such scripts can be generated and placed in a convenient directory, like the root of a version controlled repository, with the executable `envx`:
+`envy` cannot be executed directly. rather, `envy.sh` can be sourced from `$PATH` by a POSIX UPU Shell, either interactively or in an executable script.
+such scripts can be generated and placed in a convenient directory, like the root of a version controlled repository, with the executable `envx`:
 
 ```sh
 [ENVP=bin] envx [path/to/target/directory]
