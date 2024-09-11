@@ -1,20 +1,20 @@
 envf () {
-	if [ $# = 0 ]; then
+	if [ $# -eq 0 ]; then
 		set -- "$@" "envf"
 	fi
-	if [ $# = 1 ]; then
+	if [ $# -eq 1 ]; then
 		set -- "$@" "{"
 	fi
-	if [ $# = 2 ]; then
+	if [ $# -eq 2 ]; then
 		set -- "$@" "}"
 	fi
-	if [ $# = 3 ]; then
+	if [ $# -eq 3 ]; then
 		eval "set -- \"\$@\" \${${1}_-\$((0-1))}"
 	fi
-	if [ $# = 4 ]; then
+	if [ $# -eq 4 ]; then
 		set -- "$@" $((${4}+1))
 	fi
-	if [ $# = 5 ]; then
+	if [ $# -eq 5 ]; then
 		eval "$(
 			cat <<-EOT
 				${1}_=${5}
