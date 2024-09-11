@@ -157,7 +157,8 @@ envf envs-<<'EOT'
 ```
 
 the repo (todo) is an example of multiplayer deployment automation for a monorepo with multiple services and deployment environments.
-it implements locks with timeouts for deployment environments, that from a bastion.
+it implements locks with timeouts that users can use to reserve deployment environments.
+it is meant to be placed on a shared bastion host, and controlled via ssh.
 
 ## Similar Projects
 
