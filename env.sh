@@ -1,12 +1,5 @@
 . "envy.sh"
 
-envf envy <<-'EOT'
-	if [ $# -eq 0 ]; then
-		set -- "$@" "."
-	fi
-	$envy_prev "$@"
-	EOT
-
 : ${ENVF="$(basename -- "${ENV}")"}
 
 envf envs <<-'EOT'
@@ -20,8 +13,14 @@ envf envs <<-'EOT'
 	fi
 	EOT
 
-HOME="$(dirname -- "${ENV}")"
-export HOME
+envf envy <<-'EOT'
+	if [ $# -eq 0 ]; then
+		set -- "$@" "."
+	fi
+	$envy_prev "$@"
+	EOT
+
+export HOME="$(dirname -- "${ENV}")"
 
 if [ $# -eq 0 ]; then
 	PS1='$(logname)@$(uname -n) $(pwd) \$ '
