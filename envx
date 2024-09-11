@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+. "envy.sh"
+
+ENVX=$(realpath -- "${0}")
+ENVD="$(dirname -- "${ENVX}")"
+
+envd "$@"
+
+if [ "${ENVP-o}" = "${ENVP-x}" ]; then
+	mkdir -p -- "${ENVP}"
+	ENVP="$(realpath -- "${ENVP}")"
+
+	cp -H -- "${ENVD}/envy" "${ENVD}/envy.sh" "${ENVD}/env.sh" "${ENVP}"
+
+	cat > envy <<-EOT
+		#!/usr/bin/env sh
+		export PATH="${ENVP}:\${PATH}"
+		. "envy.sh"
+		envy "\$@"
+		EOT
+else
+	cat > envy <<-EOT
+		#!/usr/bin/env sh
+		. "envy.sh"
+		envy "\$@"
+		EOT
+fi
+
+chmod -- +x envy
+
+cat > env.sh <<-EOT
+	. "env.sh"
+	EOT

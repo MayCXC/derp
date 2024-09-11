@@ -6,40 +6,51 @@ these constructs are useful for automation and resource sharing in both interact
 
 ## Synopsis
 
+`envy` is not meant to be executed from `$PATH` directly. rather, `envy.sh` can be sourced from `$PATH` by an executable script in any desired directory, like the root of a version controlled repository. such scripts can be generated and placed in the desired directory with the executable `envx`:
+
 ```sh
-envy [path/to/profile/env.sh] [...]
+[ENVP=bin] envx [path/to/target/directory]
 ```
+
+which generates an executable `envy`:
+
+```sh
+exec ./path/to/target/directory/envy [path/to/profile/env.sh] [...]
+```
+
+that sources `envy` either from a copy placed in the directory specified by `$ENVP`, or otherwise from `$PATH`.
 
 ## Examples
 
 ```sh
 $ cat path/to/profile/a.sh
 $ cat path/to/profile/b.sh
-$ envy path/to/profile/a.sh path/to/profile/b.sh
+$ ./envy path/to/profile/a.sh path/to/profile/b.sh
 ```
 
 ## Environment Variables
 
-the following environment variables are modified and exported from envy:
+the following environment variables are set by, and exported from, `envy`:
 
-* `$ENVY` is the absolute path of the `envy` executable. it is used to resolve the default value of `$ENVYSH`, or otherwise can be used to extend it, [(ex.)](#advanced).
+* `$ENVY` is the absolute path of the `envy` executable.
 
-* `$ENVYSH` is the absolute path of `envy.sh`. it can be sourced from a profile to allow use of its shell functions, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
-this entrypoint can also be extended with its own utility functions, in the same manner as other profiles.
+* `$ENVD` is the dirname of `$ENVY`.
 
-* `$ENVSH` is the absolute path of the default `env.sh`. it can be sourced from a profile to extend its behavior. the default `env.sh` sources `$ENVYSH`, sources each profile in `$ENVS` with `envs`, and sets new values for `$HOME` and `$PS1`.
+the following environment variables are provided with default values by, and exported from, `envy`:
 
-* `$ENVS` is an `$IFS` delimited list of profile paths to source. it defaults to `.` if `${ENV}` is not null.
+* `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `env.sh`, and it is resolved from `$ENVD`.
 
-* `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `$ENVSH`.
+* `$ENVS` is an `$IFS` delimited list of paths that the default profile, `env.sh`, sources. its default value is an empty string.
 
-the following environment variables are set by, but not exported from, envy:
+the following environment variables are set and then unset by, but not exported from, `envy`:
 
 * `ENVSTAIL`
 * `ENVSARGS`
 * `ENVSSPIN`
 
-finally, the default profile appends `$ENVD` to profile paths that resolve to a directory. its default value is `env.sh`.
+the following environment variables are provided with default values by the default profile, `env.sh`:
+
+* `$ENVF` is the path sourced by the extended `envs` function from any directory that it receives, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). its default value is the basename of `$ENV`.
 
 ## POSIX Shell Functions
 
@@ -67,13 +78,13 @@ envf fname -<<'EOT'
   EOT
 
 fname 1 2 3 4 5
+# todo
 ```
 
 these definitions are then evaluated as follows:
 
-```
-fname_ = 0
-
+```sh
+fname_=0
 fname_0 () {
   echo parent
   if [ $# -gt 0 ]; then
@@ -83,23 +94,26 @@ fname_0 () {
   fi
 }
 
+unset -f -- fname
 fname () {
   fname_0 "$@"
 }
 
+fname_=1
 fname_1 () {
   fname_prev = "fname_0"
   echo child
-  if [ $# -gt 3 ]l then
+  if [ $# -gt 3 ] then
     echo $1
     shift
     fname $@
   else
     $fname_prev "$@"
   fi
-  unset fname_prev
+  unset -v -- fname_prev
 }
 
+unset -f -- fname
 fname () {
   fname_1 "$@"
 }
@@ -115,15 +129,17 @@ the `envs` function is used to source profiles from their own directories:
 $ cat enva.sh
 $ cat dirb/envb.sh
 $ cat dirb/dirc/envc.sh
-$ . enva.sh
-
+$ ENV=enva.sh ./envy
+# todo
 ```
 
-the default profile extends `envs` to handle profile directories with `$ENVD`, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
+this allows for relative sources between profiles.
 if `envs` receives an error exit code when it sources a profile, it exits with that code.
-any paths sourced from `envs` that do not start with `/` are prepended with `./`, to avoid sources from `$PATH`.
+the default profile extends `envs` to append `$ENVF` to any directory paths it encounters, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
 
 the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is to do with posix sh):
+
+the default profile defines a function named `envy` that sources `$ENVY`, with `.` as its argument if none were given.
 
 ## Advanced Usage
 
@@ -136,7 +152,7 @@ envf envs-<<'EOT'
   for p in "$@"; do
     echo todo
     read y/N
-    if [ review = "y" ]; then
+    if review "y/N"; then
       "${EDITOR} ${p}"
       read y/N
       ssh-keygen ...
@@ -144,6 +160,9 @@ envf envs-<<'EOT'
   done
   EOT
 ```
+
+the repo (todo) is an example of multiplayer deployment automation for a monorepo with multiple services and deployment environments.
+it implements locks with timeouts for deployment environments, that from a bastion.
 
 ## Similar Projects
 
