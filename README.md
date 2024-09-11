@@ -6,7 +6,7 @@ these constructs are useful for automation and resource sharing in both interact
 
 ## Synopsis
 
-`envy` is not meant to be executed from `$PATH` directly. rather, `envy.sh` can be sourced from `$PATH` by an executable script in any desired directory, like the root of a version controlled repository. such scripts can be generated and placed in the desired directory with the executable `envx`:
+`envy` cannot be executed directly. rather, `envy.sh` can be sourced from `$PATH` by a POSIX UPU Shell, either interactively or via an executable script. such scripts can be generated and placed in the desired directory, like the root of a version controlled repository, with the executable `envx`:
 
 ```sh
 [ENVP=bin] envx [path/to/target/directory]
@@ -32,7 +32,7 @@ $ ./envy path/to/profile/a.sh path/to/profile/b.sh
 
 the following environment variables are provided with default values by, and exported from, `envy`:
 
-* `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `env.sh`, and it is resolved from `$ENVD`.
+* `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `env.sh`, and it is resolved from the dirname of `$0`.
 
 * `$ENVS` is an `$IFS` delimited list of paths that the default profile, `env.sh`, sources. its default value is an empty string.
 
@@ -133,7 +133,7 @@ the default profile extends `envs` to append `$ENVF` to any directory paths it e
 
 the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is to do with posix sh):
 
-the default profile defines a function named `envy` that sources `$ENVY`, with `.` as its argument if none were given.
+the `envy` function . the default profile defines a function named `envy` that sources `$ENVY`, with `.` as its argument if none were given.
 
 ## Advanced Usage
 
