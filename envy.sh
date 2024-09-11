@@ -18,8 +18,6 @@ envf () {
 		eval "$(
 			cat <<-EOT
 				${1}_=${5}
-				EOT
-			cat <<-EOT
 				${1}_${5} () ${2}
 				EOT
 			if [ ${5} -gt 0 ]; then
@@ -35,11 +33,7 @@ envf () {
 			fi
 			cat <<-EOT
 				${3}
-				EOT
-			cat <<-EOT
 				unset -f -- ${1}
-				EOT
-			cat <<-EOT
 				${1} () ${2}
 				${1}_${5} "\$@"
 				${3}

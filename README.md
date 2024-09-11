@@ -133,7 +133,7 @@ the default profile extends `envs` to append `$ENVF` to any directory paths it e
 
 the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is to do with posix sh):
 
-the `envy` function . the default profile defines a function named `envy` that sources `$ENVY`, with `.` as its argument if none were given.
+the `envy` function resolves and exports `$ENV` and `$ENVS`, and then executes `sh`. the default profile extends `envy` to use `.` as its default argument if none were given.
 
 ## Advanced Usage
 
