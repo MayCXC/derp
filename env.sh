@@ -1,15 +1,15 @@
 . "envy.sh"
 
-: ${ENVF="$(basename -- "${ENV}")"}
+: ${ENVN="$(basename -- "${ENV}")"}
 
 envf envs <<-'EOT'
 	if [ $# -eq 1 ] && [ -d "${1}" ]; then
 		set -- "$@" "${PWD}"
 		envd "${1}"
-		$envs_prev "${ENVF}"
+		envs "${ENVN}"
 		envd "${2}"
 	else
-		$envs_prev "$@"
+		envs_ "$@"
 	fi
 	EOT
 
@@ -17,34 +17,40 @@ envf envy <<-'EOT'
 	if [ $# -eq 0 ]; then
 		set -- "$@" "."
 	fi
-	$envy_prev "$@"
+	envy_ "$@"
 	EOT
 
-export HOME="$(dirname -- "${ENV}")"
-
-if [ $# -eq 0 ]; then
+envf envp <<-'EOT'
+	HOME="$(dirname -- "${ENV}")"
 	PS1='$(logname)@$(uname -n) $(pwd) \$ '
+	EOT
+
+envf envp <<-'EOT'
+	envp_ "$@"
 	PS1=". ${ENV}\n${PS1}"
-
-	if [ "${IFS-o}" = "${IFS-x}" ]; then
-		set -- ${ENVS}
-	else
-		IFS=":"
-		set -- ${ENVS}
-		unset -v -- IFS
-	fi
-
-	envs "$@"
-
 	while [ $# -gt 0 ]; do
 		if [ -d "${1}" ]; then
-			PS1=". ${1%"/"}/${ENVF#"/"}\n${PS1}"
+			PS1=". ${1%"/"}/${ENVN#"/"}\n${PS1}"
 		else
 			PS1=". ${1}\n${PS1}"
 		fi
 		shift
 	done
-
 	PS1="\n${PS1}"
+	EOT
+
+if [ $# -eq 0 ]; then
+	eval "$(
+		envl IFS <<-'EOT'
+			: ${IFS=":"}
+			set -- ${ENVS}
+			EOT
+	)"
+
+	envs "$@"
+	envp "$@"
+	shift $#
+
+	export HOME
 	export PS1
 fi

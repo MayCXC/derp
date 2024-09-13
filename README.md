@@ -37,22 +37,18 @@ the following environment variables are provided with default values by, and exp
 
 * `$ENVS` is an `$IFS` delimited list of paths that the default profile, `env.sh`, sources. its default value is an empty string.
 
-the following environment variables are set and then unset by, but not exported from, `envy`:
-
-* `ENVSTAIL`
-* `ENVSARGS`
-* `ENVSSPIN`
-
 the following environment variables are provided with default values by the default profile, `env.sh`:
 
-* `$ENVF` is the path sourced by the extended `envs` function from any directory that it receives, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). its default value is the basename of `$ENV`.
+* `$ENVN` is the path sourced by the extended `envs` function from any directory that it receives, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). its default value is the basename of `$ENV`.
 
 ## POSIX Shell Functions
+
+the `envl` function is used to scope local variables by restoring or unsetting their values after a heredoc is evaluated.
 
 the `envf` function is used to define and extend shell functions:
 
 ```sh
-envf fname -<<'EOT'
+envf fname <<-'EOT'
   echo parent
   if [ $# -gt 0 ]; then
     echo "$@"
@@ -61,14 +57,14 @@ envf fname -<<'EOT'
   fi
   EOT
 
-envf fname -<<'EOT'
+envf fname <<-'EOT'
   echo child
   if [ $# -gt 3 ]; then
     echo $1
     shift
     fname "$@"
   else
-    $fname_prev "$@"
+    fname_ "$@"
   fi
   EOT
 
@@ -79,42 +75,54 @@ fname 1 2 3 4 5
 these definitions are then evaluated as follows:
 
 ```sh
-fname_=0
-fname_0 () {
-  echo parent
-  if [ $# -gt 0 ]; then
-    echo "$@"
-    shift
-    fname "$@"
-  fi
+fname ()
+{
+	eval "$(
+		envl fname_head <<-EOT_
+			fname_head=${fname_tail}
+			fname_${fname_head} "\$@"
+			EOT_
+	)"
 }
 
-unset -f -- fname
-fname () {
-  fname_0 "$@"
+fname_ ()
+{
+	eval "$(
+		envl fname_head <<-EOT_
+			fname_head=$((${fname_head}-1))
+			fname_${fname_head} "\$@"
+			EOT_
+	)"
 }
 
-fname_=1
-fname_1 () {
-  fname_prev = "fname_0"
-  echo child
-  if [ $# -gt 3 ] then
-    echo $1
-    shift
-    fname "$@"
-  else
-    $fname_prev "$@"
-  fi
-  unset -v -- fname_prev
+fname_tail=0
+
+fname_0 ()
+{
+    echo parent;
+    if [ $# -gt 0 ]; then
+        echo "$@";
+        shift;
+        fname "$@";
+    fi
 }
 
-unset -f -- fname
-fname () {
-  fname_1 "$@"
+fname_tail=1
+
+fname_1 ()
+{
+    echo child;
+    if [ $# -gt 3 ]; then
+        echo $1;
+        shift;
+        fname "$@";
+    else
+        fname_ "$@";
+    fi
 }
 ```
 
-in the example above, `$fname_prev` calls the extended implementation `fname_0` from the extention implementation `fname_1`.
+in the example above, `fname_` calls the extended implementation `fname_0` from the extention implementation `fname_1`.
 
 the `envd` function applies sane default options to `cd`.
 
@@ -130,7 +138,7 @@ $ ENV=enva.sh ./envy
 
 this allows for relative sources between profiles.
 if `envs` receives an error exit code when it sources a profile, it exits with that code.
-the default profile extends `envs` to append `$ENVF` to any directory paths it encounters, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
+the default profile extends `envs` to append `$ENVN` to any directory paths it encounters, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
 
 the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is to do with posix sh):
 
@@ -158,7 +166,7 @@ envf envs-<<'EOT'
 
 the repo (todo) is an example of multiplayer deployment automation for a monorepo with multiple services and deployment environments.
 it implements locks with timeouts that users can use to reserve exclusive access to each deployment environment.
-it is meant to be placed on a shared bastion host, and controlled via ssh.
+it is meant to be placed on a shared bastion host, and accessed via `ssh`.
 
 ## Similar Projects
 

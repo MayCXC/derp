@@ -3,29 +3,25 @@
 
 envd "$@"
 
-if [ "${ENVP-o}" = "${ENVP-x}" ]; then
-	ENVD="$(dirname -- "${0}")"
-	mkdir -p -- "${ENVP}"
-	cp -H -- "${ENVD}/envy.sh" "${ENVD}/env.sh" "${ENVP}"
-fi
-
 cat > envy <<-EOT
 	#!/usr/bin/env sh
-	. "envy.sh"
 	EOT
 
-if [ "${ENVP-o}" = "${ENVP-x}" ]; then
+if [ "${ENVX-o}" = "${ENVX-x}" ]; then
+	mkdir -p -- "${ENVX}"
+	ENVO="$(dirname -- "${0}")"
+	cp -H -- "${ENVO}/envy.sh" "${ENVO}/env.sh" "${ENVX}"
 	cat >> envy <<-EOT
-		ENVP=\$(
-			envd "\$(dirname -- "\${0}")"
-			realpath -- "${ENVP}"
-		)
-		export PATH="\${ENVP}:\${PATH}"
+		export PATH="$(realpath -- "${ENVX}"):\${PATH}"
 		EOT
 fi
 
 cat >> envy <<-EOT
-	envy "\$@"
+	. "envy.sh"
+	case "\$(command -v -- envy)" in
+		(/*) type envy;;
+		(*) envy "\$@";;
+	esac
 	EOT
 
 chmod -- +x envy
