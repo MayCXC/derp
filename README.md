@@ -151,7 +151,7 @@ the following example is a replacement `envy.sh` that extends `envs` to interact
 ```sh
 . "envy.sh"
 
-envf envs-<<'EOT'
+envf envs<<-'EOT'
   for p in "$@"; do
     echo todo
     read y/N
