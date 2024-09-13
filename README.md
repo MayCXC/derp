@@ -10,7 +10,7 @@ these constructs are useful for automation and resource sharing in both interact
 such scripts can be generated and placed in a convenient directory, like the root of a version controlled repository, with the executable `envx`:
 
 ```sh
-[ENVP=bin] envx [path/to/target/directory]
+[ENVX=bin] envx [path/to/target/directory]
 ```
 
 which generates an executable `envy`:
@@ -19,7 +19,7 @@ which generates an executable `envy`:
 exec ./path/to/target/directory/envy [path/to/profile/env.sh] [...]
 ```
 
-that sources `envy.sh` either from a copy placed in the directory specified by `$ENVP`, or otherwise from `$PATH`, and calls the function `envy` with its arguments.
+that sources `envy.sh` either from a copy placed in the directory specified by `$ENVX`, or otherwise from `$PATH`, and calls the function `envy` with its arguments.
 
 ## Examples
 
