@@ -88,19 +88,6 @@ fname_0 () {
 
 fname_tail=0
 
-fname_1 () {
-  echo child;
-  if [ $# -gt 3 ]; then
-    echo $1;
-    shift;
-    fname "$@";
-  else
-    fname_ "$@";
-  fi
-}
-
-fname_tail=1
-
 fname () {
   eval "$(
     envl fname_head <<-EOT_
@@ -118,6 +105,19 @@ fname_ () {
       EOT_
   )"
 }
+
+fname_1 () {
+  echo child;
+  if [ $# -gt 3 ]; then
+    echo $1;
+    shift;
+    fname "$@";
+  else
+    fname_ "$@";
+  fi
+}
+
+fname_tail=1
 ```
 
 in the example above, `fname_` calls the extended implementation `fname_0` from the extention implementation `fname_1`.
