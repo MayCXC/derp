@@ -1,6 +1,12 @@
 . "envy.sh"
 
-: ${ENVN="$(basename -- "${ENV}")"}
+if [ ! "${ENVN-o}" = "${ENVN-x}" ]; then
+	if [ "${ENV-o}" = "${ENV-x}" ] && [ -f "${ENV}" ]; then
+		ENVN="$(basename -- "${ENV}")"
+	else
+		ENVN="env.sh"
+	fi
+fi
 
 envf envs <<-'EOT'
 	if [ $# -eq 1 ] && [ -d "${1}" ]; then

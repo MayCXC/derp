@@ -43,7 +43,7 @@ the following environment variables are provided with default values by the defa
 
 ## POSIX Shell Functions
 
-the `envt` and `envr` functions serialize strings to and deserialize strings from a series of of octal (`\0ddd`) escape sequences.
+the `envt` and `envr` functions serialize strings to and deserialize strings from a series of octal (`\0ddd`) escape sequences.
 
 the `envl` function is used to scope local variables by restoring or unsetting their values after a heredoc is evaluated.
 
