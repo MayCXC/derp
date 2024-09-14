@@ -12,6 +12,7 @@ fi
 if [ ! -e "envy" ]; then
 	cat > envy <<-EOT
 		#!/usr/bin/env sh
+		export HOME="\$(dirname -- "\$(realpath -- "\${0}")")"
 		EOT
 
 	if [ "${ENVX-o}" = "${ENVX-x}" ]; then
@@ -19,9 +20,9 @@ if [ ! -e "envy" ]; then
 		mkdir -p -- "${ENVX}"
 		cp -H -- "${ENVO}/envy.sh" "${ENVO}/env.sh" "${ENVX}"
 		ENVX="$(realpath -- "${ENVX}")"
-		ENVX="${ENVX#"$(pwd -P)/"}"
+		ENVX="${ENVX#"$(pwd -P)"}"
 		cat >> envy <<-EOT
-			export PATH="\$(realpath -- "\$(dirname -- "\${0}")/${ENVX}"):\${PATH}"
+			export PATH="\${HOME%"/"}/${ENVX#"/"}:\${PATH}"
 			EOT
 	fi
 
