@@ -1,7 +1,7 @@
 . "envy.sh"
 
 if [ ! "${ENVN-o}" = "${ENVN-x}" ]; then
-	if [ "${ENV-o}" = "${ENV-x}" ] && [ -f "${ENV}" ]; then
+	if [ "${ENV-o}" = "${ENV-x}" ]; then
 		ENVN="$(basename -- "${ENV}")"
 	else
 		ENVN="env.sh"
