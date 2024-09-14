@@ -135,7 +135,7 @@ $ ENV=enva.sh ./envy
 ```
 
 this allows for relative sources between profiles.
-file arguments are prepended with `./`, so `envs` will never source a profile from `$PATH`.
+sourced file names are always prepended with `./`, so `envs` will never source a profile from `$PATH`.
 if `envs` receives an error exit code when it sources a profile, it exits with that code.
 the default profile extends `envs` to append `$ENVN` to any directory paths it encounters, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
 
