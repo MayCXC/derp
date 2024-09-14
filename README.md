@@ -77,24 +77,6 @@ fname 1 2 3 4 5
 these definitions are then evaluated as follows:
 
 ```sh
-fname () {
-  eval "$(
-    envl fname_head <<-EOT_
-      fname_head=\${fname_tail}
-      fname_\${fname_head} "\$@"
-      EOT_
-  )"
-}
-
-fname_ () {
-  eval "$(
-    envl fname_head <<-EOT_
-      fname_head=\$((\${fname_head}-1))
-      fname_\${fname_head} "\$@"
-      EOT_
-  )"
-}
-
 fname_tail=0
 
 fname_0 () {
@@ -117,6 +99,24 @@ fname_1 () {
   else
     fname_ "$@";
   fi
+}
+
+fname () {
+  eval "$(
+    envl fname_head <<-EOT_
+      fname_head=\${fname_tail}
+      fname_\${fname_head} "\$@"
+      EOT_
+  )"
+}
+
+fname_ () {
+  eval "$(
+    envl fname_head <<-EOT_
+      fname_head=\$((\${fname_head}-1))
+      fname_\${fname_head} "\$@"
+      EOT_
+  )"
 }
 ```
 
