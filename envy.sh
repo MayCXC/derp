@@ -128,7 +128,7 @@ envf envg <<-'EOT'
 	set -- ${ENVSARGS}
 	ENVSSPIN=$#
 	while [ ${ENVSSPIN} -gt 0 ]; do
-		set -- "$@" "$(realpath "${1}")"
+		set -- "$@" "$(realpath -- "${1}")"
 		shift
 		ENVSSPIN=$((${ENVSSPIN}-1))
 	done

@@ -21,7 +21,7 @@ envf envy <<-'EOT'
 	EOT
 
 envf envp <<-'EOT'
-	HOME="$(dirname -- "${ENV}")"
+	HOME="$(realpath -- "$(dirname -- "${0}")")"
 	PS1='$(logname)@$(uname -n) $(pwd) \$ '
 	EOT
 
