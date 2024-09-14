@@ -15,11 +15,15 @@ if [ ! -e "envy" ]; then
 		EOT
 
 	if [ "${ENVX-o}" = "${ENVX-x}" ]; then
-		mkdir -p -- "${ENVX}"
 		ENVO="$(dirname -- "${0}")"
+		mkdir -p -- "${ENVX}"
 		cp -H -- "${ENVO}/envy.sh" "${ENVO}/env.sh" "${ENVX}"
+		ENVX="$(realpath -- "${ENVX}")"
+		ENVX="${ENVX#"$(pwd -P)/"}"
 		cat >> envy <<-EOT
-			export PATH="$(realpath -- "${ENVX}"):\${PATH}"
+			ENVO="\$(dirname -- "\${0}")"
+			ENVX="${ENVX}"
+			export PATH="\$(realpath -- "\${ENVO}/\${ENVX}"):\${PATH}"
 			EOT
 	fi
 
