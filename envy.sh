@@ -51,12 +51,12 @@ envf () {
 	if [ $# -ge 4 ]; then
 		eval "$(
 			cat <<-EOT
-				${1}_tail=${4}
 				${1}_${4} () ${2}
 				EOT
 			cat
 			cat <<-EOT
 				${3}
+				${1}_tail=${4}
 				EOT
 			if [ ${4} -eq 0 ]; then
 				cat <<-EOT

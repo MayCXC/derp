@@ -77,8 +77,6 @@ fname 1 2 3 4 5
 these definitions are then evaluated as follows:
 
 ```sh
-fname_tail=0
-
 fname_0 () {
   echo parent;
   if [ $# -gt 0 ]; then
@@ -88,7 +86,7 @@ fname_0 () {
   fi
 }
 
-fname_tail=1
+fname_tail=0
 
 fname_1 () {
   echo child;
@@ -100,6 +98,8 @@ fname_1 () {
     fname_ "$@";
   fi
 }
+
+fname_tail=1
 
 fname () {
   eval "$(
