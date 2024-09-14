@@ -139,11 +139,10 @@ envf envg <<-'EOT'
 
 envf envy <<-'EOT'
 	: ${ENV="env.sh"}
-	case "${ENV}" in
-		(/*);;
-		(*)ENV="$(dirname -- "${0}")/${ENV}";;
-	esac
-	ENV="$(realpath -- "${ENV}")"
+	ENV="$(
+		envd "$(dirname -- "${0}")"
+		realpath -- "${ENV}"
+	)"
 
 	: ${ENVS=""}
 
