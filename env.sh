@@ -42,7 +42,7 @@ envf envp <<-'EOT'
 if [ $# -eq 0 ]; then
 	eval "$(
 		envl IFS <<-'EOT'
-			: ${IFS=":"}
+			IFS=":"
 			set -- ${ENVS}
 			EOT
 	)"

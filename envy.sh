@@ -1,10 +1,24 @@
+envt () {
+	while [ $# -gt 0 ]; do
+		printf '%s' "${1}" | od -An -b -v | xargs -E '' printf '\\0%s'
+		shift
+	done
+}
+
+envr () {
+	while [ $# -gt 0 ]; do
+		printf '%b' "${1}"
+		shift
+	done
+}
+
 envl () {
 	cat
 	while [ $# -gt 0 ]; do
 		eval "set -- \"\${${1}-o}\" \"\${${1}-x}\" \"\$@\""
 		if [ "${1}" = "${2}" ]; then
 			cat <<-EOT
-				${3}=$'$(printf '%s' "${1}" | od -An -b -v | xargs -E '' printf '\\%s')'
+				${3}="\$(envr '$(envt "${1}")')"
 				EOT
 		else
 			cat <<-EOT
@@ -49,16 +63,16 @@ envf () {
 					${1} () ${2}
 						eval "\$(
 							envl ${1}_head <<-EOT_
-								${1}_head=\${${1}_tail}
-								${1}_\${${1}_head} "\\\$@"
+								${1}_head=\\\${${1}_tail}
+								${1}_\\\${${1}_head} "\\\$@"
 								EOT_
 						)"
 					${3}
 					${1}_ () ${2}
 						eval "\$(
 							envl ${1}_head <<-EOT_
-								${1}_head=\$((\${${1}_head}-1))
-								${1}_\${${1}_head} "\\\$@"
+								${1}_head=\\\$((\\\${${1}_head}-1))
+								${1}_\\\${${1}_head} "\\\$@"
 								EOT_
 						)"
 					${3}
@@ -100,6 +114,29 @@ envf envs <<-'EOT'
 	fi
 	EOT
 
+envf envg <<-'EOT'
+	while [ $# -gt 0 ]; do
+		if [ "${1}" = "--" ]; then
+			ENVSTAIL=$#
+			shift
+			ENVSARGS="$*"
+		else
+			shift
+		fi
+	done
+
+	set -- ${ENVSARGS}
+	ENVSSPIN=$#
+	while [ ${ENVSSPIN} -gt 0 ]; do
+		set -- "$@" "$(realpath "${1}")"
+		shift
+		ENVSSPIN=$((${ENVSSPIN}-1))
+	done
+
+	set -- ${ENVS} "$@"
+	ENVS="$*"
+	EOT
+
 envf envy <<-'EOT'
 	: ${ENV="env.sh"}
 	ENV="$(
@@ -111,29 +148,10 @@ envf envy <<-'EOT'
 
 	eval "$(
 		envl IFS ENVSTAIL ENVSARGS ENVSSPIN <<-'EOT_'
-			: ${IFS=":"}
-
+			IFS=":"
 			ENVSTAIL=$#
 			ENVSARGS="$*"
-			while [ $# -gt 0 ]; do
-				if [ "${1}" = "--" ]; then
-					ENVSTAIL=$#
-					shift
-					ENVSARGS="$*"
-				else
-					shift
-				fi
-			done
-			set -- ${ENVSARGS}
-
-			ENVSSPIN=$#
-			while [ ${ENVSSPIN} -gt 0 ]; do
-				set -- "$@" "$(realpath "${1}")"
-				shift
-				ENVSSPIN=$((${ENVSSPIN}-1))
-			done
-			set -- ${ENVS} "$@"
-			ENVS="$*"
+			envg "$@"
 
 			ENVSSPIN=$(($#-${ENVSTAIL}))
 			while [ ${ENVSSPIN} -gt 0 ]; do
@@ -149,5 +167,5 @@ envf envy <<-'EOT'
 	export ENV
 	export ENVS
 	# POSIX User Portability Utilities sh
-	exec sh "$@"
+	sh "$@"
 	EOT

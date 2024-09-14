@@ -3,29 +3,33 @@
 
 envd "$@"
 
-cat > envy <<-EOT
-	#!/usr/bin/env sh
-	EOT
-
-if [ "${ENVX-o}" = "${ENVX-x}" ]; then
-	mkdir -p -- "${ENVX}"
-	ENVO="$(dirname -- "${0}")"
-	cp -H -- "${ENVO}/envy.sh" "${ENVO}/env.sh" "${ENVX}"
-	cat >> envy <<-EOT
-		export PATH="$(realpath -- "${ENVX}"):\${PATH}"
+if [ ! -e "env.sh" ]; then
+	cat > env.sh <<-EOT
+		. "env.sh"
 		EOT
 fi
 
-cat >> envy <<-EOT
-	. "envy.sh"
-	case "\$(command -v -- envy)" in
-		(/*) type envy;;
-		(*) envy "\$@";;
-	esac
-	EOT
+if [ ! -e "envy" ]; then
+	cat > envy <<-EOT
+		#!/usr/bin/env sh
+		EOT
 
-chmod -- +x envy
+	if [ "${ENVX-o}" = "${ENVX-x}" ]; then
+		mkdir -p -- "${ENVX}"
+		ENVO="$(dirname -- "${0}")"
+		cp -H -- "${ENVO}/envy.sh" "${ENVO}/env.sh" "${ENVX}"
+		cat >> envy <<-EOT
+			export PATH="$(realpath -- "${ENVX}"):\${PATH}"
+			EOT
+	fi
 
-cat > env.sh <<-EOT
-	. "env.sh"
-	EOT
+	cat >> envy <<-EOT
+		. "envy.sh"
+		case "\$(command -v -- envy)" in
+			(/*) type envy;;
+			(*) envy "\$@";;
+		esac
+		EOT
+
+	chmod -- +x envy
+fi

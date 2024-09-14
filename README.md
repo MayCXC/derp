@@ -35,13 +35,15 @@ the following environment variables are provided with default values by, and exp
 
 * `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `env.sh`, and it is resolved from the dirname of `$0`.
 
-* `$ENVS` is an `$IFS` delimited list of paths that the default profile, `env.sh`, sources. its default value is an empty string.
+* `$ENVS` is a `:` delimited list of paths that the default profile, `env.sh`, sources. its default value is an empty string.
 
 the following environment variables are provided with default values by the default profile, `env.sh`:
 
 * `$ENVN` is the path sourced by the extended `envs` function from any directory that it receives, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). its default value is the basename of `$ENV`.
 
 ## POSIX Shell Functions
+
+the `envt` and `envr` functions serialize strings to and deserialize strings from a series of of octal (`\0ddd`) escape sequences.
 
 the `envl` function is used to scope local variables by restoring or unsetting their values after a heredoc is evaluated.
 
@@ -141,6 +143,8 @@ if `envs` receives an error exit code when it sources a profile, it exits with t
 the default profile extends `envs` to append `$ENVN` to any directory paths it encounters, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
 
 the `envc` function is used to document and configure completions for functions defined with `envf` (todo, unsure how possible this is to do with posix sh):
+
+the `envg` function separates profiles from `sh` options, and sets `$ENVS` to a `:` delimited list of absolute profile paths.
 
 the `envy` function resolves and exports `$ENV` and `$ENVS`, and then executes `sh`. the default profile extends `envy` to use `.` as its default argument if none were given.
 
