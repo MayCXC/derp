@@ -81,8 +81,8 @@ fname ()
 {
 	eval "$(
 		envl fname_head <<-EOT_
-			fname_head=${fname_tail}
-			fname_${fname_head} "\$@"
+			fname_head=\${fname_tail}
+			fname_\${fname_head} "\$@"
 			EOT_
 	)"
 }
@@ -91,8 +91,8 @@ fname_ ()
 {
 	eval "$(
 		envl fname_head <<-EOT_
-			fname_head=$((${fname_head}-1))
-			fname_${fname_head} "\$@"
+			fname_head=\$((\${fname_head}-1))
+			fname_\${fname_head} "\$@"
 			EOT_
 	)"
 }
@@ -101,26 +101,25 @@ fname_tail=0
 
 fname_0 ()
 {
-    echo parent;
-    if [ $# -gt 0 ]; then
-        echo "$@";
-        shift;
-        fname "$@";
-    fi
+	echo parent;
+	if [ $# -gt 0 ]; then
+    echo "$@";
+    shift;
+    fname "$@";
+	fi
 }
 
 fname_tail=1
 
-fname_1 ()
-{
-    echo child;
-    if [ $# -gt 3 ]; then
-        echo $1;
-        shift;
-        fname "$@";
-    else
-        fname_ "$@";
-    fi
+fname_1 () {
+	echo child;
+	if [ $# -gt 3 ]; then
+    echo $1;
+    shift;
+    fname "$@";
+	else
+    fname_ "$@";
+	fi
 }
 ```
 
