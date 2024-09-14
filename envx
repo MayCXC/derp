@@ -21,9 +21,7 @@ if [ ! -e "envy" ]; then
 		ENVX="$(realpath -- "${ENVX}")"
 		ENVX="${ENVX#"$(pwd -P)/"}"
 		cat >> envy <<-EOT
-			ENVO="\$(dirname -- "\${0}")"
-			ENVX="${ENVX}"
-			export PATH="\$(realpath -- "\${ENVO}/\${ENVX}"):\${PATH}"
+			export PATH="\$(realpath -- "\$(dirname -- "\${0}")/${ENVX}"):\${PATH}"
 			EOT
 	fi
 
