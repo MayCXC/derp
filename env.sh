@@ -46,11 +46,7 @@ if [ $# -eq 0 ]; then
 			set -- ${ENVS}
 			EOT
 	)"
-
 	envs "$@"
 	envp "$@"
 	shift $#
-
-	export HOME
-	export PS1
 fi

@@ -31,7 +31,7 @@ $ ./envy path/to/profile/a.sh path/to/profile/b.sh
 
 ## Environment Variables
 
-the following environment variables are provided with default values by, and exported from, `envy`:
+the following environment variables are provided with default values by `envy`:
 
 * `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `env.sh`, and it is resolved from the dirname of `$0`.
 
@@ -142,7 +142,7 @@ the `envc` function is used to document and configure completions for functions 
 
 the `envg` function separates profiles from `sh` options, and sets `$ENVS` to a `:` delimited list of absolute profile paths.
 
-the `envy` function resolves and exports `$ENV` and `$ENVS`, and then executes `sh`. the default profile extends `envy` to use `.` as its default argument if none were given.
+the `envy` function sets and resolves `$ENV` and `$ENVS`, and then executes `sh` with them in its environment. the default profile extends `envy` to use `.` as its default argument if none were given.
 
 ## Advanced Usage
 

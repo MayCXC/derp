@@ -100,7 +100,7 @@ envf envs <<-'EOT'
 	if [ $# -eq 1 ]; then
 		set -- "$@" "${PWD}"
 		envd "$(dirname -- "${1}")"
-		. "$(basename -- "${1}")"
+		. "./$(basename -- "${1}")"
 		set -- "$@" $?
 		if [ ${3} -ne 0 ]; then
 			exit ${3}
@@ -138,34 +138,35 @@ envf envg <<-'EOT'
 	EOT
 
 envf envy <<-'EOT'
-	: ${ENV="env.sh"}
-	ENV="$(
-		envd "$(dirname -- "${0}")"
-		realpath -- "${ENV}"
-	)"
-
-	: ${ENVS=""}
-
 	eval "$(
-		envl IFS ENVSTAIL ENVSARGS ENVSSPIN <<-'EOT_'
-			IFS=":"
-			ENVSTAIL=$#
-			ENVSARGS="$*"
-			envg "$@"
+		envl ENV ENVS <<-'EOT_'
+			: ${ENV="env.sh"}
+			ENV="$(
+				envd "$(dirname -- "${0}")"
+				realpath -- "${ENV}"
+			)"
 
-			ENVSSPIN=$(($#-${ENVSTAIL}))
-			while [ ${ENVSSPIN} -gt 0 ]; do
-				set -- "$@" "${1}"
-				shift
-				ENVSSPIN=$((${ENVSSPIN}-1))
-			done
+			: ${ENVS=""}
 
-			shift ${ENVSTAIL}
+			eval "$(
+				envl IFS ENVSTAIL ENVSARGS ENVSSPIN <<-'EOT__'
+					IFS=":"
+					ENVSTAIL=$#
+					ENVSARGS="$*"
+					envg "$@"
+
+					ENVSSPIN=$(($#-${ENVSTAIL}))
+					while [ ${ENVSSPIN} -gt 0 ]; do
+						set -- "$@" "${1}"
+						shift
+						ENVSSPIN=$((${ENVSSPIN}-1))
+					done
+
+					shift ${ENVSTAIL}
+					EOT__
+			)"
+			# POSIX User Portability Utilities sh
+			ENV="${ENV}" ENVS="${ENVS}" sh "$@"
 			EOT_
 	)"
-
-	export ENV
-	export ENVS
-	# POSIX User Portability Utilities sh
-	sh "$@"
 	EOT
