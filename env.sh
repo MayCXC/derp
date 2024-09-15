@@ -14,7 +14,7 @@ envf envs <<-'EOT'
 	EOT
 
 envf envy <<-'EOT'
-	if [ $# -eq 0 ]; then
+	if [ $# -lt 1 ]; then
 		set -- "$@" "."
 	fi
 	envy_ "$@"
