@@ -111,7 +111,7 @@ envf envg <<-'EOT'
 		set -- "$@" "envg"
 	fi
 	envf "$@"
-	envf "$@" <<-EOT_
+	envf "${1}" "{" "}" <<-EOT_
 		eval "\$(
 			envw "${PWD}" <<-'EOT__'
 				${1}_ "\$@"
