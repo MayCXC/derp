@@ -31,7 +31,7 @@ envl () {
 
 envw () {
 	cat <<-EOT
-		envd "$@"
+		envd \$@
 		EOT
 	cat
 	cat <<-EOT
