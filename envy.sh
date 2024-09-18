@@ -30,9 +30,12 @@ envl () {
 }
 
 envw () {
-	cat <<-EOT
-		envd $@
-		EOT
+	while [ $# -gt 0 ]; do
+		cat <<-EOT
+			envd "\$(envr '$(envt "${1}")')"
+			EOT
+		shift
+	done
 	cat
 	cat <<-EOT
 		envd "\${PWD}"
