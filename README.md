@@ -45,7 +45,7 @@ the following environment variables are provided with default values by the defa
 
 the `envt` and `envr` functions serialize strings to and deserialize strings from a series of octal (`\0ddd`) escape sequences.
 
-the `envl` function is used to scope local variables by restoring or unsetting their values after a heredoc is evaluated.
+the `envl` function is used with `eval` to scope local variables by restoring or unsetting their values after a heredoc is evaluated.
 
 the `envf` function is used to define and extend shell functions:
 
@@ -126,6 +126,10 @@ the `envc` function is used to document and configure completions for functions 
 
 the `envd` function applies sane default options to `cd`.
 
+the `envw` function is used with `eval` to change and then return to the working directory before and after a heredoc is evaluated with `envd`.
+
+the `envg` function applies its heredoc in the working directory with `envw`.
+
 the `envs` function is used to source profiles from their own directories:
 
 ```sh
@@ -141,7 +145,7 @@ sourced file names are always prepended with `./`, so `envs` will never source a
 if `envs` receives an error exit code when it sources a profile, it exits with that code.
 the default profile extends `envs` to append `$ENVN` to any directory paths it encounters, and then uses it to source the profiles in `$ENVS`, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh).
 
-the `envg` function separates profiles from `sh` options, and sets `$ENVS` to a `:` delimited list of absolute profile paths.
+the `enve` function separates profiles from `sh` options, and sets `$ENVS` to a `:` delimited list of absolute profile paths.
 
 the `envy` function sets and resolves `$ENV` and `$ENVS`, and then executes `sh` with them in its environment. the default profile extends `envy` to use `.` as its default argument if none were given.
 

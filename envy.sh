@@ -29,6 +29,16 @@ envl () {
 	done
 }
 
+envw () {
+	cat <<-EOT
+		envd "$@"
+		EOT
+	cat
+	cat <<-EOT
+		envd "\${PWD}"
+		EOT
+}
+
 envf () {
 	if [ $# -lt 1 ]; then
 		set -- "$@" "envf"
@@ -62,17 +72,17 @@ envf () {
 				cat <<-EOT
 					${1} () ${2}
 						eval "\$(
-							envl ${1}_head <<-EOT_
-								${1}_head=\\\${${1}_tail}
-								${1}_\\\${${1}_head} "\\\$@"
+							envl ${1}_head <<-'EOT_'
+								${1}_head=\${${1}_tail}
+								${1}_\${${1}_head} "\$@"
 								EOT_
 						)"
 					${3}
 					${1}_ () ${2}
 						eval "\$(
-							envl ${1}_head <<-EOT_
-								${1}_head=\\\$((\\\${${1}_head}-1))
-								${1}_\\\${${1}_head} "\\\$@"
+							envl ${1}_head <<-'EOT_'
+								${1}_head=\$((\${${1}_head}-1))
+								${1}_\${${1}_head} "\$@"
 								EOT_
 						)"
 					${3}
@@ -96,6 +106,20 @@ envf envd <<-'EOT'
 	done
 	EOT
 
+envf envg <<-'EOT'
+	if [ $# -lt 1 ]; then
+		set -- "$@" "envg"
+	fi
+	envf "$@"
+	envf "$@" <<-EOT_
+		eval "\$(
+			envw "${PWD}" <<-'EOT__'
+				${1}_ "\$@"
+				EOT__
+		)"
+		EOT_
+	EOT
+
 envf envs <<-'EOT'
 	if [ $# -eq 1 ]; then
 		set -- "$@" "${PWD}"
@@ -114,7 +138,7 @@ envf envs <<-'EOT'
 	fi
 	EOT
 
-envf envg <<-'EOT'
+envf enve <<-'EOT'
 	while [ $# -gt 0 ]; do
 		if [ "${1}" = "--" ]; then
 			ENVSTAIL=$#
@@ -153,7 +177,7 @@ envf envy <<-'EOT'
 					IFS=":"
 					ENVSTAIL=$#
 					ENVSARGS="$*"
-					envg "$@"
+					enve "$@"
 
 					ENVSSPIN=$(($#-${ENVSTAIL}))
 					while [ ${ENVSSPIN} -gt 0 ]; do
