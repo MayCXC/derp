@@ -180,3 +180,4 @@ it is meant to be placed on a shared bastion host, and accessed via `ssh`.
 - https://github.com/direnv/direnv?tab=readme-ov-file#related-projects
 - https://github.com/casey/just
 - https://github.com/casey/just?tab=readme-ov-file#alternatives-and-prior-art
+- https://github.com/pendashteh/colons.sh
