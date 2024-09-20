@@ -78,6 +78,7 @@ envf () {
 							envl ${1}_head <<-'EOT_'
 								${1}_head=\${${1}_tail}
 								${1}_\${${1}_head} "\$@"
+								return \$?
 								EOT_
 						)"
 					${3}
@@ -86,6 +87,7 @@ envf () {
 							envl ${1}_head <<-'EOT_'
 								${1}_head=\$((\${${1}_head}-1))
 								${1}_\${${1}_head} "\$@"
+								return \$?
 								EOT_
 						)"
 					${3}
@@ -155,8 +157,17 @@ envf enve <<-'EOT'
 	set -- ${ENVSARGS}
 	ENVSSPIN=$#
 	while [ ${ENVSSPIN} -gt 0 ]; do
-		set -- "$@" "$(realpath -- "${1}")"
+		ENVSREAL="$(realpath -- "${1}")"
+
+		set -- $? "$@"
+		if [ ${1} -ne 0 ]; then
+			return ${1}
+		fi
 		shift
+
+		set -- "$@" "${ENVSREAL}"
+		shift
+
 		ENVSSPIN=$((${ENVSSPIN}-1))
 	done
 
@@ -173,14 +184,26 @@ envf envy <<-'EOT'
 				realpath -- "${ENV}"
 			)"
 
+			set -- $? "$@"
+			if [ ${1} -ne 0 ]; then
+				return ${1}
+			fi
+			shift
+
 			: ${ENVS=""}
 
 			eval "$(
-				envl IFS ENVSTAIL ENVSARGS ENVSSPIN <<-'EOT__'
+				envl IFS ENVSTAIL ENVSARGS ENVSSPIN ENVSREAL <<-'EOT__'
 					IFS=":"
 					ENVSTAIL=$#
 					ENVSARGS="$*"
 					enve "$@"
+
+					set -- $? "$@"
+					if [ ${1} -ne 0 ]; then
+						return ${1}
+					fi
+					shift
 
 					ENVSSPIN=$(($#-${ENVSTAIL}))
 					while [ ${ENVSSPIN} -gt 0 ]; do
