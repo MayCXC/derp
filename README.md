@@ -175,6 +175,7 @@ it is meant to be placed on a shared bastion host, and accessed via `ssh`.
 
 ## Similar Projects
 
+- https://github.com/hyperupcall/autoenv
 - https://github.com/direnv/direnv
 - https://github.com/direnv/direnv?tab=readme-ov-file#related-projects
 - https://github.com/casey/just
