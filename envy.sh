@@ -157,7 +157,7 @@ envf enve <<-'EOT'
 	set -- ${ENVSARGS}
 	ENVSSPIN=$#
 	while [ ${ENVSSPIN} -gt 0 ]; do
-		ENVSREAL="$(realpath -- "${1}")"
+		ENVSHEAD="$(realpath -- "${1}")"
 
 		set -- $? "$@"
 		if [ ${1} -ne 0 ]; then
@@ -165,7 +165,7 @@ envf enve <<-'EOT'
 		fi
 		shift
 
-		set -- "$@" "${ENVSREAL}"
+		set -- "$@" "${ENVSHEAD}"
 		shift
 
 		ENVSSPIN=$((${ENVSSPIN}-1))
@@ -193,7 +193,7 @@ envf envy <<-'EOT'
 			: ${ENVS=""}
 
 			eval "$(
-				envl IFS ENVSTAIL ENVSARGS ENVSSPIN ENVSREAL <<-'EOT__'
+				envl IFS ENVSTAIL ENVSARGS ENVSSPIN ENVSHEAD <<-'EOT__'
 					IFS=":"
 					ENVSTAIL=$#
 					ENVSARGS="$*"
