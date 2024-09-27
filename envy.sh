@@ -1,7 +1,10 @@
 envt () {
-	xargs -E '' printf '\\0%s' <<-EOT
-		$(printf '%s' "${1}" | od -An -b -v)
-		EOT
+	while [ $# -gt 0 ]; do
+		xargs -E '' printf '\\0%s' <<-EOT
+			$(printf '%s' "${1}" | od -An -b -v)
+			EOT
+		shift
+	done
 }
 
 envr () {
