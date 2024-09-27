@@ -1,8 +1,6 @@
 envt () {
 	while [ $# -gt 0 ]; do
-		xargs -E '' printf '\\0%s' <<-EOT
-			$(printf '%s' "${1}" | od -An -b -v)
-			EOT
+		printf '%s' "${1}" | od -A n -b -v | xargs -E '' printf '\\0%s'
 		shift
 	done
 }
