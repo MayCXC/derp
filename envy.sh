@@ -15,7 +15,7 @@ envr () {
 envl () {
 	cat
 	while [ $# -gt 0 ]; do
-		eval "set -- \"\${${1}-o}\" \"\${${1}-x}\" \"\$@\""
+		eval 'set -- "${'"${1}"'-o}" "${'"${1}"'-x}" "$@"'
 		if [ "${1}" = "${2}" ]; then
 			cat <<-EOT
 				${3}="\$(envr '$(envt "${1}")')"
@@ -53,7 +53,7 @@ envf () {
 		set -- "$@" "}"
 	fi
 	if [ $# -lt 4 ]; then
-		eval "set -- \${${1}_tail-o} \${${1}_tail-x} \"\$@\""
+		eval 'set -- ${'"${1}_tail"'-o} ${'"${1}_tail"'-x} "$@"'
 		if [ "${1}" = "${2}" ]; then
 			set -- "$@" $((${1}+1))
 		else
