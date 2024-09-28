@@ -225,23 +225,23 @@ envf envy <<-'EOT'
 	)"
 	EOT
 
-	envf envz <<-'EOT'
-		eval "$(
-			envl OPTS <<-'EOT_'
-				OPTS="$*"
+envf envz <<-'EOT'
+	eval "$(
+		envl OPTS <<-'EOT_'
+			OPTS="$*"
 
-				set --
-				eval "$(
-					set +o | while read -r S O N; do
-						cat <<-EOT__
-							set -- "\$@" "\$(envr '$(envt "${O}")')" "\$(envr '$(envt "${N}")')"
-							EOT__
-					done
-				)"
+			set --
+			eval "$(
+				set +o | while read -r S O N; do
+					cat <<-EOT__
+						set -- "\$@" "\$(envr '$(envt "${O}")')" "\$(envr '$(envt "${N}")')"
+						EOT__
+				done
+			)"
 
-				set -- "$@" ${OPTS}
-				EOT_
-		)"
+			set -- "$@" ${OPTS}
+			EOT_
+	)"
 
-		exec "${0#"-"}" "$@"
-		EOT
+	exec "${0#"-"}" "$@"
+	EOT
