@@ -115,7 +115,9 @@ envf envg <<-'EOT'
 	if [ $# -lt 1 ]; then
 		set -- "$@" "envg"
 	fi
+
 	envf "$@"
+
 	envf "${1}" "{" "}" <<-EOT_
 		eval "\$(
 			envw "${PWD}" <<-'EOT__'
@@ -130,10 +132,12 @@ envf envs <<-'EOT'
 		set -- "$@" "${PWD}"
 		envd "$(dirname -- "${1}")"
 		. "./$(basename -- "${1}")"
+
 		set -- "$@" $?
 		if [ ${3} -ne 0 ]; then
 			exit ${3}
 		fi
+
 		envd "${2}"
 	else
 		while [ $# -gt 0 ]; do
@@ -191,7 +195,6 @@ envf envy <<-'EOT'
 			shift
 
 			: ${ENVS=""}
-
 			eval "$(
 				envl IFS ENVSTAIL ENVSARGS ENVSSPIN ENVSHEAD <<-'EOT__'
 					IFS=":"
@@ -215,8 +218,30 @@ envf envy <<-'EOT'
 					shift ${ENVSTAIL}
 					EOT__
 			)"
+
 			# POSIX User Portability Utilities sh
 			ENV="${ENV}" ENVS="${ENVS}" sh "$@"
 			EOT_
 	)"
 	EOT
+
+	envf envz <<-'EOT'
+		eval "$(
+			envl OPTS <<-'EOT_'
+				OPTS="$*"
+
+				set --
+				eval "$(
+					set +o | while read -r S O N; do
+						cat <<-EOT__
+							set -- "\$@" "\$(envr '$(envt "${O}")')" "\$(envr '$(envt "${N}")')"
+							EOT__
+					done
+				)"
+
+				set -- "$@" ${OPTS}
+				EOT_
+		)"
+
+		exec "${0#"-"}" "$@"
+		EOT

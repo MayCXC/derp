@@ -149,6 +149,8 @@ the `enve` function separates profiles from `sh` options, and sets `$ENVS` to a 
 
 the `envy` function sets and resolves `$ENV` and `$ENVS`, and then executes `sh` with them in its environment. the default profile extends `envy` to use `.` as its default argument if none were given.
 
+the `envz` function executes `$0` with the current shell options from `set +o` and any given arguments. this can be used to reload profiles to reflect changes made to them, or as a shell subprocess entrypoint.
+
 ## Advanced Usage
 
 the following example is a replacement `envy.sh` that extends `envs` to interactively review each profile the first time it is sourced, and then sign it with with `ssh-keygen` (todo):
@@ -181,3 +183,4 @@ it is meant to be placed on a shared bastion host, and accessed via `ssh`.
 - https://github.com/casey/just
 - https://github.com/casey/just?tab=readme-ov-file#alternatives-and-prior-art
 - https://github.com/pendashteh/colons.sh
+- https://github.com/oils-for-unix/oils
