@@ -128,7 +128,7 @@ the `envd` function applies sane default options to `cd`.
 
 the `envw` function is used with `eval` to change and then return to the working directory before and after a heredoc is evaluated with `envd`.
 
-the `envg` function applies its heredoc in the working directory with `envw`.
+the `envg` function uses `envf` to define a function that uses `envw` to apply its heredoc in the working directory.
 
 the `envs` function is used to source profiles from their own directories:
 
