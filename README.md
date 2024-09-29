@@ -149,7 +149,7 @@ the `enve` function separates profiles from `sh` options, and sets `$ENVS` to a 
 
 the `envy` function sets and resolves `$ENV` and `$ENVS`, and then executes `sh` with them in its environment. the default profile extends `envy` to use `.` as its default argument if none were given.
 
-the `envz` function executes `$0` with the current shell options from `set +o` and any given arguments. this can be used to reload profiles to reflect changes made to them, or as a shell subprocess entrypoint.
+the `envz` function executes `sh` with the current shell options from `set +o` and any given arguments. this can be used to reload profiles to reflect any changes made to them, or as an entrypoint to a shell subprocess.
 
 ## Advanced Usage
 

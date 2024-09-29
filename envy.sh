@@ -96,6 +96,7 @@ envf () {
 		)"
 	fi
 	shift 4
+
 	if [ $# -gt 0 ]; then
 		envf "$@"
 	fi
@@ -243,5 +244,6 @@ envf envz <<-'EOT'
 			EOT_
 	)"
 
-	exec "${0#"-"}" "$@"
+	# POSIX User Portability Utilities sh
+	exec sh "$@"
 	EOT
