@@ -1,7 +1,5 @@
 . "envy.sh"
 
-: ${ENVN="$(basename -- "${ENV-"env.sh"}")"}
-
 envf envs <<-'EOT'
 	if [ $# -eq 1 ] && [ -d "${1}" ]; then
 		set -- "$@" "${PWD}"

@@ -78,8 +78,8 @@ envf () {
 							envl ${1}_head <<-'EOT_'
 								${1}_head=\${${1}_tail}
 								${1}_\${${1}_head} "\$@"
-								return \$?
 								EOT_
+							return \$?
 						)"
 					${3}
 					${1}_ () ${2}
@@ -87,8 +87,8 @@ envf () {
 							envl ${1}_head <<-'EOT_'
 								${1}_head=\$((\${${1}_head}-1))
 								${1}_\${${1}_head} "\$@"
-								return \$?
 								EOT_
+							return \$?
 						)"
 					${3}
 					EOT
@@ -162,7 +162,14 @@ envf enve <<-'EOT'
 	set -- ${ENVSARGS}
 	ENVSSPIN=$#
 	while [ ${ENVSSPIN} -gt 0 ]; do
-		ENVSHEAD="$(realpath -- "${1}")"
+		ENVSHEAD="$(
+			if [ -d "${1}" ]; then
+				envd "${1}"
+				realpath -- "${ENVN}"
+			else
+				realpath -- "${1}"
+			fi
+		)"
 
 		set -- $? "$@"
 		if [ ${1} -ne 0 ]; then
@@ -182,11 +189,24 @@ envf enve <<-'EOT'
 
 envf envy <<-'EOT'
 	eval "$(
-		envl ENV ENVS <<-'EOT_'
-			: ${ENV="env.sh"}
+		envl ENVN ENV ENVS <<-'EOT_'
+			: ${ENVN="env.sh"}
+			: ${ENV="${ENVN}"}
+			: ${ENVS=""}
+
 			ENV="$(
-				envd "$(dirname -- "${0}")"
-				realpath -- "${ENV}"
+				if [ -d "${0#"-"}" ]; then
+					envd "${0#"-"}"
+				else
+					envd "$(dirname -- "${0#"-"}")"
+				fi
+
+				if [ -d "${ENV}" ]; then
+					envd "${ENV}"
+					realpath -- "${ENVN}"
+				else
+					realpath -- "${ENV}"
+				fi
 			)"
 
 			set -- $? "$@"
@@ -195,12 +215,12 @@ envf envy <<-'EOT'
 			fi
 			shift
 
-			: ${ENVS=""}
 			eval "$(
 				envl IFS ENVSTAIL ENVSARGS ENVSSPIN ENVSHEAD <<-'EOT__'
 					IFS=":"
 					ENVSTAIL=$#
 					ENVSARGS="$*"
+
 					enve "$@"
 
 					set -- $? "$@"
@@ -221,7 +241,7 @@ envf envy <<-'EOT'
 			)"
 
 			# POSIX User Portability Utilities sh
-			ENV="${ENV}" ENVS="${ENVS}" sh "$@"
+			ENVN="${ENVN}" ENV="${ENV}" ENVS="${ENVS}" sh "$@"
 			EOT_
 	)"
 	EOT
