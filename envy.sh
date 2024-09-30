@@ -38,7 +38,7 @@ envw () {
 	done
 	cat
 	cat <<-EOT
-		envd "\${PWD}"
+		envd "\$(envr '$(envt "${PWD}")')"
 		EOT
 }
 
@@ -121,7 +121,7 @@ envf envg <<-'EOT'
 
 	envf "${1}" "{" "}" <<-EOT_
 		eval "\$(
-			envw "${PWD}" <<-'EOT__'
+			envw "\$(envr '$(envt "${PWD}")')" <<-'EOT__'
 				${1}_ "\$@"
 				EOT__
 		)"
