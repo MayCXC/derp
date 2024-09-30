@@ -33,13 +33,11 @@ $ ./envy path/to/profile/a.sh path/to/profile/b.sh
 
 the following environment variables are provided with default values by `envy`:
 
-* `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `env.sh`, and it is resolved from the dirname of `$0`.
+* `$ENVN` is the default profile name resolved from directories passed to `envy`. its default value is `env.sh`.
+
+* `$ENV` is the same environment variable received by a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html). its default value is `$ENVN`, and it is resolved from the dirname of `$0`.
 
 * `$ENVS` is a `:` delimited list of paths that the default profile, `env.sh`, sources. its default value is an empty string.
-
-the following environment variables are provided with default values by the default profile, `env.sh`:
-
-* `$ENVN` is the path sourced by the extended `envs` function from any directory that it receives, [(ex.)](https://github.com/MayCXC/envy/blob/master/env.sh). its default value is the basename of `$ENV`.
 
 ## POSIX Shell Functions
 
