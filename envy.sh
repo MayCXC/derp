@@ -32,11 +32,7 @@ envl () {
 }
 
 envf () {
-	while
-		if [ $# -lt 1 ]; then
-			set -- "$@" "envf"
-		fi
-
+	while [ $# -gt 0 ]; do
 		if [ $# -lt 2 ]; then
 			set -- "$@" "{"
 		fi
@@ -94,9 +90,7 @@ envf () {
 		shift
 		shift
 		shift
-
-		[ $# -gt 0 ]
-	do :; done
+	done
 }
 
 envf envd <<-'EOT'
@@ -123,11 +117,7 @@ envw () {
 }
 
 envf envg <<-'EOT'
-	while
-		if [ $# -lt 1 ]; then
-			set -- "$@" "envg"
-		fi
-
+	while [ $# -gt 0 ]; do
 		if [ $# -gt 4 ]; then
 			envf "${1}" "${2}" "${3}" "${4}"
 		else
@@ -145,9 +135,7 @@ envf envg <<-'EOT'
 		shift
 		shift
 		shift
-
-		[ $# -gt 0 ]
-	do :; done
+	done
 	EOT
 
 envf envs <<-'EOT'
