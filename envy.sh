@@ -30,63 +30,61 @@ envl () {
 }
 
 envf () {
-	if [ $# -lt 1 ]; then
-		set -- "$@" "envf"
-	fi
-	if [ $# -lt 2 ]; then
-		set -- "$@" "{"
-	fi
-	if [ $# -lt 3 ]; then
-		set -- "$@" "}"
-	fi
-	if [ $# -lt 4 ]; then
-		eval 'set -- ${'"${1}_tail"'-o} ${'"${1}_tail"'-x} "$@"'
-		if [ "${1}" = "${2}" ]; then
-			set -- "$@" $((${1}+1))
-		else
-			set -- "$@" 0
+	while [ $# -gt 0 ]; do
+		if [ $# -lt 1 ] || [ -z "${1}" ]; then
+			set -- "$@" "envf"
 		fi
-		shift 2
-	fi
-	if [ $# -ge 4 ]; then
-		eval "$(
-			cat <<-EOT
-				${1}_${4} () ${2}
-				EOT
-			cat
-			cat <<-EOT
-				${3}
-				${1}_tail=${4}
-				EOT
-			if [ ${4} -eq 0 ]; then
-				cat <<-EOT
-					${1} () ${2}
-						eval "\$(
-							envl ${1}_head <<-'EOT_'
-								${1}_head=\${${1}_tail}
-								${1}_\${${1}_head} "\$@"
-								EOT_
-							return \$?
-						)"
-					${3}
-					${1}_ () ${2}
-						eval "\$(
-							envl ${1}_head <<-'EOT_'
-								${1}_head=\$((\${${1}_head}-1))
-								${1}_\${${1}_head} "\$@"
-								EOT_
-							return \$?
-						)"
-					${3}
-					EOT
+		if [ $# -lt 2 ] || [ -z "${2}" ]; then
+			set -- "$@" "{"
+		fi
+		if [ $# -lt 3 ] || [ -z "${3}" ]; then
+			set -- "$@" "}"
+		fi
+		if [ $# -lt 4 ] || [ -z "${4}" ]; then
+			eval 'set -- ${'"${1}_tail"'-o} ${'"${1}_tail"'-x} "$@"'
+			if [ "${1}" = "${2}" ]; then
+				set -- "$@" $((${1}+1))
+			else
+				set -- "$@" 0
 			fi
-		)"
-	fi
-	shift 4
-
-	if [ $# -gt 0 ]; then
-		envf "$@"
-	fi
+			shift 2
+		fi
+		if [ $# -ge 4 ]; then
+			eval "$(
+				cat <<-EOT
+					${1}_${4} () ${2}
+					EOT
+				cat
+				cat <<-EOT
+					${3}
+					${1}_tail=${4}
+					EOT
+				if [ ${4} -eq 0 ]; then
+					cat <<-EOT
+						${1} () ${2}
+							eval "\$(
+								envl ${1}_head <<-'EOT_'
+									${1}_head=\${${1}_tail}
+									${1}_\${${1}_head} "\$@"
+									EOT_
+								return \$?
+							)"
+						${3}
+						${1}_ () ${2}
+							eval "\$(
+								envl ${1}_head <<-'EOT_'
+									${1}_head=\$((\${${1}_head}-1))
+									${1}_\${${1}_head} "\$@"
+									EOT_
+								return \$?
+							)"
+						${3}
+						EOT
+				fi
+			)"
+		fi
+		shift 4
+	done
 }
 
 envf envd <<-'EOT'
