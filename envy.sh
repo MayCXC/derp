@@ -29,19 +29,6 @@ envl () {
 	done
 }
 
-envw () {
-	while [ $# -gt 0 ]; do
-		cat <<-EOT
-			envd "\$(envr '$(envt "${1}")')"
-			EOT
-		shift
-	done
-	cat
-	cat <<-EOT
-		envd "\$(envr '$(envt "${PWD}")')"
-		EOT
-}
-
 envf () {
 	if [ $# -lt 1 ]; then
 		set -- "$@" "envf"
@@ -111,6 +98,19 @@ envf envd <<-'EOT'
 		shift
 	done
 	EOT
+
+envw () {
+	while [ $# -gt 0 ]; do
+		cat <<-EOT
+			envd "\$(envr '$(envt "${1}")')"
+			EOT
+		shift
+	done
+	cat
+	cat <<-EOT
+		envd "\$(envr '$(envt "${PWD}")')"
+		EOT
+}
 
 envf envg <<-'EOT'
 	if [ $# -lt 1 ]; then
