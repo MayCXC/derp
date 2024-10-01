@@ -130,16 +130,15 @@ envf envg <<-'EOT'
 
 envf envs <<-'EOT'
 	if [ $# -eq 1 ]; then
-		set -- "$@" "${PWD}"
-		envd "$(dirname -- "${1}")"
-		. "./$(basename -- "${1}")"
-
-		set -- "$@" $?
-		if [ ${3} -ne 0 ]; then
-			exit ${3}
-		fi
-
-		envd "${2}"
+		eval "$(
+			envw "$(dirname -- "${1}")" <<-'EOT_'
+				. "./$(basename -- "${1}")"
+				set -- $? "$@"
+				if [ ${1} -ne 0 ]; then
+					exit ${1}
+				fi
+				EOT_
+		)"
 	else
 		while [ $# -gt 0 ]; do
 			envs "${1}"
