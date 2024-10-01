@@ -195,11 +195,7 @@ envf envy <<-'EOT'
 			: ${ENVS=""}
 
 			ENV="$(
-				if [ -d "${0#"-"}" ]; then
-					envd "${0#"-"}"
-				else
-					envd "$(dirname -- "${0#"-"}")"
-				fi
+				envd "$(dirname -- "${0}")"
 
 				if [ -d "${ENV}" ]; then
 					envd "${ENV}"
