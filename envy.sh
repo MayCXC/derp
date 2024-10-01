@@ -25,30 +25,37 @@ envl () {
 				unset -v -- ${3}
 				EOT
 		fi
-		shift 3
+		shift
+		shift
+		shift
 	done
 }
 
 envf () {
-	while [ $# -gt 0 ]; do
-		if [ $# -lt 1 ] || [ -z "${1}" ]; then
+	while
+		if [ $# -lt 1 ]; then
 			set -- "$@" "envf"
 		fi
-		if [ $# -lt 2 ] || [ -z "${2}" ]; then
+
+		if [ $# -lt 2 ]; then
 			set -- "$@" "{"
 		fi
-		if [ $# -lt 3 ] || [ -z "${3}" ]; then
+
+		if [ $# -lt 3 ]; then
 			set -- "$@" "}"
 		fi
-		if [ $# -lt 4 ] || [ -z "${4}" ]; then
+
+		if [ $# -lt 4 ]; then
 			eval 'set -- ${'"${1}_tail"'-o} ${'"${1}_tail"'-x} "$@"'
 			if [ "${1}" = "${2}" ]; then
 				set -- "$@" $((${1}+1))
 			else
 				set -- "$@" 0
 			fi
-			shift 2
+			shift
+			shift
 		fi
+
 		if [ $# -ge 4 ]; then
 			eval "$(
 				cat <<-EOT
@@ -83,8 +90,13 @@ envf () {
 				fi
 			)"
 		fi
-		shift 4
-	done
+		shift
+		shift
+		shift
+		shift
+
+		[ $# -gt 0 ]
+	do :; done
 }
 
 envf envd <<-'EOT'
@@ -111,19 +123,31 @@ envw () {
 }
 
 envf envg <<-'EOT'
-	if [ $# -lt 1 ]; then
-		set -- "$@" "envg"
-	fi
+	while
+		if [ $# -lt 1 ]; then
+			set -- "$@" "envg"
+		fi
 
-	envf "$@"
+		if [ $# -gt 4 ]; then
+			envf "${1}" "${2}" "${3}" "${4}"
+		else
+			envf "$@"
+		fi
 
-	envf "${1}" "{" "}" <<-EOT_
-		eval "\$(
-			envw "\$(envr '$(envt "${PWD}")')" <<-'EOT__'
-				${1}_ "\$@"
-				EOT__
-		)"
-		EOT_
+		envf "${1}" "{" "}" <<-EOT_
+			eval "\$(
+				envw "\$(envr '$(envt "${PWD}")')" <<-'EOT__'
+					${1}_ "\$@"
+					EOT__
+			)"
+			EOT_
+		shift
+		shift
+		shift
+		shift
+
+		[ $# -gt 0 ]
+	do :; done
 	EOT
 
 envf envs <<-'EOT'
