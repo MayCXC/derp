@@ -228,7 +228,6 @@ envf envy <<-'EOT'
 					shift ${ENVSTAIL}
 					EOT__
 			)"
-
 			# POSIX User Portability Utilities sh
 			ENVN="${ENVN}" ENV="${ENV}" ENVS="${ENVS}" sh "$@"
 			EOT_
@@ -252,7 +251,6 @@ envf envz <<-'EOT'
 			set -- "$@" ${OPTS}
 			EOT_
 	)"
-
 	# POSIX User Portability Utilities sh
 	exec sh "$@"
 	EOT
