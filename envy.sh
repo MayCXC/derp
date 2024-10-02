@@ -25,9 +25,7 @@ envl () {
 				unset -v -- ${3}
 				EOT
 		fi
-		shift
-		shift
-		shift
+		shift 3
 	done
 }
 
@@ -83,8 +81,6 @@ envf () {
 			EOT
 		shift
 	done
-
-	shift
 }
 
 envf envd <<-'EOT'
