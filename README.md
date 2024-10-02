@@ -1,6 +1,8 @@
 # envy
 stackable and composable `sh` profiles
 
+todo make envf and envg f(name alias alias alias) push n to first and while $# > 1 it
+
 envy is a script generator and a collection of functions that enable a [POSIX User Portability Utilities Shell](https://pubs.opengroup.org/onlinepubs/9799919799/utilities/sh.html) to source multiple profiles, and share definitions between them.
 these constructs are useful for automation and resource sharing in both interactive and non-interactive environments.
 
