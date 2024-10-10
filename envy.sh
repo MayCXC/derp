@@ -1,13 +1,13 @@
 envt () {
 	while [ $# -gt 0 ]; do
-		printf '%s' "${1}" | od -A n -b -v | xargs -E '' printf '\\0%s'
+		printf -- '%s' "${1}" | od -A n -b -v | xargs -E '' -- printf -- '\\0%s'
 		shift
 	done
 }
 
 envr () {
 	while [ $# -gt 0 ]; do
-		printf '%b' "${1}"
+		printf -- '%b' "${1}"
 		shift
 	done
 }
@@ -228,6 +228,7 @@ envf envy <<-'EOT'
 					shift ${ENVSTAIL}
 					EOT__
 			)"
+
 			# POSIX User Portability Utilities sh
 			ENVN="${ENVN}" ENV="${ENV}" ENVS="${ENVS}" sh "$@"
 			EOT_
@@ -236,21 +237,20 @@ envf envy <<-'EOT'
 
 envf envz <<-'EOT'
 	eval "$(
-		envl OPTS <<-'EOT_'
-			OPTS="$*"
+		envl IFS <<-'EOT_'
+			unset IFS
 
-			set --
-			eval "$(
-				set +o | while read -r S O N; do
+			set -- $(
+				set +o | while read -r -- S O N; do
 					cat <<-EOT__
-						set -- "\$@" "\$(envr '$(envt "${O}")')" "\$(envr '$(envt "${N}")')"
+						${O}
+						${N}
 						EOT__
 				done
-			)"
-
-			set -- "$@" ${OPTS}
+			) "$@"
 			EOT_
 	)"
+
 	# POSIX User Portability Utilities sh
 	exec sh "$@"
 	EOT
