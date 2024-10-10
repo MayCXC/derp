@@ -238,7 +238,7 @@ envf envy <<-'EOT'
 envf envz <<-'EOT'
 	eval "$(
 		envl IFS <<-'EOT_'
-			unset IFS
+			unset -v -- IFS
 
 			set -- $(
 				set +o | while read -r -- S O N; do
